@@ -201,7 +201,11 @@ export const Beranda: React.FC = () => {
 
               <div className="relative bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 p-4 rounded-[2.2rem] shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                 <img
-                  src={profil?.kepalaDesa?.foto || "/assets/images/kepala-desa.png"}
+                  src={
+                    profil?.kepalaDesa?.foto && !profil.kepalaDesa.foto.includes('unsplash.com')
+                      ? profil.kepalaDesa.foto
+                      : "/assets/images/kepala-desa.png"
+                  }
                   alt={profil?.kepalaDesa?.nama || "Kepala Desa"}
                   className="w-64 h-80 object-cover rounded-[1.6rem] shadow-inner bg-slate-100 ring-4 ring-primary-500/10 hover:ring-primary-500/25 transition-all duration-300"
                 />
