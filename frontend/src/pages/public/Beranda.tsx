@@ -49,7 +49,7 @@ export const Beranda: React.FC = () => {
           api.getProduk(),
           api.getWisata(),
         ]);
-        
+
         setProfil(pData);
         setStats(sData);
         // Only get published content and limit size
@@ -70,7 +70,7 @@ export const Beranda: React.FC = () => {
 
   return (
     <div className="pb-16 font-sans">
-      
+
       {/* 1. Hero Section */}
       <section className="relative bg-gradient-to-br from-emerald-50 via-slate-50 to-emerald-100/30 dark:from-primary-950 dark:via-slate-900 dark:to-[#052511] text-slate-800 dark:text-white overflow-hidden pt-8 pb-20 sm:pt-12 sm:pb-28 border-b border-slate-100 dark:border-slate-900">
         {/* Background Image Overlay */}
@@ -84,7 +84,7 @@ export const Beranda: React.FC = () => {
 
         {/* Gradient Scrim for Readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-slate-50 via-slate-50/85 to-transparent dark:from-slate-900 dark:via-slate-900/80 dark:to-transparent pointer-events-none z-[1]"></div>
-        
+
         {/* Decorative glowing shapes */}
         <div className="absolute top-0 right-0 w-[450px] h-[450px] bg-primary-500/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
         <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-emerald-600/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
@@ -92,7 +92,7 @@ export const Beranda: React.FC = () => {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            
+
             {/* Left Content */}
             <div className="lg:col-span-7 text-left">
               <div className="inline-flex items-center gap-2 mb-6 px-3.5 py-1.5 rounded-full bg-emerald-100/80 dark:bg-emerald-950/60 border border-emerald-250 dark:border-emerald-500/35 text-emerald-800 dark:text-emerald-300 text-[10px] font-extrabold uppercase tracking-widest shadow-sm">
@@ -133,14 +133,14 @@ export const Beranda: React.FC = () => {
             {/* Right Logo Crest with Floating Badges */}
             <div className="lg:col-span-5 flex justify-center mt-12 lg:mt-0 relative">
               <div className="relative w-72 h-72 sm:w-85 sm:h-85 flex items-center justify-center">
-                
+
                 {/* Glowing backdrops */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500 via-primary-600 to-green-400 rounded-full blur-3xl opacity-20 transition-all duration-700 animate-pulse"></div>
                 <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/15 via-primary-500/5 to-emerald-400/15 rounded-full blur-2xl opacity-65 transition-all duration-700"></div>
-                
+
                 {/* Outer rotating dotted ring */}
                 <div className="absolute inset-0 border-2 border-dashed border-emerald-500/20 dark:border-emerald-500/15 rounded-full animate-[spin_100s_linear_infinite] pointer-events-none"></div>
-                
+
                 {/* Circular glass card */}
                 <div className="relative w-64 h-64 sm:w-72 sm:h-72 bg-white/70 dark:bg-slate-900/50 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 rounded-full p-8 flex items-center justify-center shadow-2xl transition-all duration-500 hover:scale-[1.02]">
                   <img
@@ -198,10 +198,10 @@ export const Beranda: React.FC = () => {
             <div className="relative group">
               {/* Outer glowing border */}
               <div className="absolute inset-0 bg-primary-600 rounded-[2.5rem] blur-2xl opacity-15 group-hover:opacity-25 transition-opacity duration-300"></div>
-              
+
               <div className="relative bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 p-4 rounded-[2.2rem] shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                 <img
-                  src={profil?.kepalaDesa?.foto || "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=300"}
+                  src={profil?.kepalaDesa?.foto || "/assets/images/kepala-desa.png"}
                   alt={profil?.kepalaDesa?.nama || "Kepala Desa"}
                   className="w-64 h-80 object-cover rounded-[1.6rem] shadow-inner bg-slate-100 ring-4 ring-primary-500/10 hover:ring-primary-500/25 transition-all duration-300"
                 />
@@ -242,11 +242,11 @@ export const Beranda: React.FC = () => {
       <section className="relative overflow-hidden bg-gradient-to-r from-primary-950 via-emerald-800 to-primary-950 text-white py-16 shadow-2xl">
         {/* Grid Background Pattern */}
         <div className="absolute inset-0 opacity-10 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-        
+
         {/* Glowing orbs */}
         <div className="absolute -top-24 -left-24 w-80 h-80 bg-emerald-500/20 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-secondary-500/20 rounded-full blur-3xl"></div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between gap-8 z-10">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-emerald-200 text-[10px] font-bold uppercase tracking-widest mb-4">
@@ -280,7 +280,7 @@ export const Beranda: React.FC = () => {
       <section className="py-24 bg-slate-50/50 dark:bg-slate-900/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-            
+
             {/* News Column */}
             <div className="lg:col-span-8">
               <div className="flex justify-between items-center mb-8">
@@ -302,40 +302,40 @@ export const Beranda: React.FC = () => {
                 ) : (
                   berita.map((item) => (
                     <Card key={item.id} hoverEffect noPadding className="group flex flex-col h-full overflow-hidden border border-slate-100 dark:border-slate-800/80 hover:shadow-lg transition-all duration-300">
-                    <div className="h-48 w-full overflow-hidden relative">
-                      <img
-                        src={item.gambar}
-                        alt={item.judul}
-                        className="h-full w-full object-cover bg-slate-100 group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute top-3 left-3">
-                        <Badge type="info" variant="solid" className="bg-primary-600/90 text-[10px]">
-                          {item.kategori}
-                        </Badge>
+                      <div className="h-48 w-full overflow-hidden relative">
+                        <img
+                          src={item.gambar}
+                          alt={item.judul}
+                          className="h-full w-full object-cover bg-slate-100 group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute top-3 left-3">
+                          <Badge type="info" variant="solid" className="bg-primary-600/90 text-[10px]">
+                            {item.kategori}
+                          </Badge>
+                        </div>
                       </div>
-                    </div>
-                    <div className="p-5 flex-1 flex flex-col justify-between">
-                      <div>
-                        <span className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold mb-2 block">{formatDate(item.tanggal)}</span>
-                        <h4 className="text-sm sm:text-base font-bold text-slate-850 dark:text-white line-clamp-2 leading-snug mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                          <Link to={`/informasi/berita/${item.id}`}>{item.judul}</Link>
-                        </h4>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed mb-4">
-                          {item.ringkasan}
-                        </p>
+                      <div className="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold mb-2 block">{formatDate(item.tanggal)}</span>
+                          <h4 className="text-sm sm:text-base font-bold text-slate-850 dark:text-white line-clamp-2 leading-snug mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                            <Link to={`/informasi/berita/${item.id}`}>{item.judul}</Link>
+                          </h4>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-3 leading-relaxed mb-4">
+                            {item.ringkasan}
+                          </p>
+                        </div>
+                        <Link
+                          to={`/informasi/berita/${item.id}`}
+                          className="inline-flex items-center text-xs font-bold text-primary-600 dark:text-primary-400 hover:underline gap-1 mt-auto"
+                        >
+                          Selengkapnya
+                          <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                        </Link>
                       </div>
-                      <Link
-                        to={`/informasi/berita/${item.id}`}
-                        className="inline-flex items-center text-xs font-bold text-primary-600 dark:text-primary-400 hover:underline gap-1 mt-auto"
-                      >
-                        Selengkapnya
-                        <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-                      </Link>
-                    </div>
-                  </Card>
-                ))
-              )}
-            </div>
+                    </Card>
+                  ))
+                )}
+              </div>
             </div>
 
             {/* Announcements Column */}
@@ -359,27 +359,27 @@ export const Beranda: React.FC = () => {
                 ) : (
                   pengumuman.map((item) => (
                     <Card key={item.id} hoverEffect className="group border-l-4 border-l-primary-500 dark:border-l-primary-500 p-5 relative overflow-hidden transition-all duration-300">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold">{formatDate(item.tanggal)}</span>
-                        {item.penting && (
-                          <Badge type="danger" variant="solid" className="text-[9px] px-1.5 py-0.5 animate-pulse">
-                            PENTING
-                          </Badge>
-                        )}
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold">{formatDate(item.tanggal)}</span>
+                          {item.penting && (
+                            <Badge type="danger" variant="solid" className="text-[9px] px-1.5 py-0.5 animate-pulse">
+                              PENTING
+                            </Badge>
+                          )}
+                        </div>
+                        <Megaphone size={14} className="text-slate-350 dark:text-slate-550 group-hover:text-primary-500 transition-colors" />
                       </div>
-                      <Megaphone size={14} className="text-slate-350 dark:text-slate-550 group-hover:text-primary-500 transition-colors" />
-                    </div>
-                    <h4 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors mb-2 line-clamp-2">
-                      <Link to={`/informasi/pengumuman/${item.id}`}>{item.judul}</Link>
-                    </h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                      {item.ringkasan}
-                    </p>
-                  </Card>
-                ))
-              )}
-            </div>
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors mb-2 line-clamp-2">
+                        <Link to={`/informasi/pengumuman/${item.id}`}>{item.judul}</Link>
+                      </h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                        {item.ringkasan}
+                      </p>
+                    </Card>
+                  ))
+                )}
+              </div>
             </div>
 
           </div>
@@ -389,7 +389,7 @@ export const Beranda: React.FC = () => {
       {/* 6. Pesona Desa (Wisata & Produk UMKM) */}
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           {/* Wisata Section */}
           <div className="mb-20">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
@@ -405,38 +405,38 @@ export const Beranda: React.FC = () => {
                 <ArrowRight size={14} />
               </Link>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {loading ? (
                 <Skeleton variant="wisata-card" count={3} />
               ) : (
                 wisata.map((item) => (
                   <div key={item.id} className="group relative h-80 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer">
-                  {/* Background Image */}
-                  <img
-                    src={item.foto}
-                    alt={item.nama}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  {/* Black/Green Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent group-hover:via-emerald-950/25 transition-all duration-500"></div>
-                  
-                  {/* Content Container */}
-                  <div className="absolute inset-0 p-5 flex flex-col justify-end text-white">
-                    <h4 className="text-base sm:text-lg font-extrabold tracking-tight mb-1 group-hover:text-emerald-300 transition-colors">
-                      {item.nama}
-                    </h4>
-                    <p className="text-xs text-slate-200/90 line-clamp-2 mb-4 leading-relaxed font-medium">
-                      {item.deskripsi}
-                    </p>
-                    <Link
-                      to={`/pesona-desa/destinasi-wisata/${item.id}`}
-                      className="inline-flex items-center text-xs font-bold text-emerald-400 hover:text-emerald-300 gap-1.5 w-fit"
-                    >
-                      Lihat Jam & Tiket
-                      <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
+                    {/* Background Image */}
+                    <img
+                      src={item.foto}
+                      alt={item.nama}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    {/* Black/Green Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent group-hover:via-emerald-950/25 transition-all duration-500"></div>
+
+                    {/* Content Container */}
+                    <div className="absolute inset-0 p-5 flex flex-col justify-end text-white">
+                      <h4 className="text-base sm:text-lg font-extrabold tracking-tight mb-1 group-hover:text-emerald-300 transition-colors">
+                        {item.nama}
+                      </h4>
+                      <p className="text-xs text-slate-200/90 line-clamp-2 mb-4 leading-relaxed font-medium">
+                        {item.deskripsi}
+                      </p>
+                      <Link
+                        to={`/pesona-desa/destinasi-wisata/${item.id}`}
+                        className="inline-flex items-center text-xs font-bold text-emerald-400 hover:text-emerald-300 gap-1.5 w-fit"
+                      >
+                        Lihat Jam & Tiket
+                        <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                      </Link>
+                    </div>
                   </div>
                 ))
               )}
@@ -458,58 +458,58 @@ export const Beranda: React.FC = () => {
                 <ArrowRight size={14} />
               </Link>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {loading ? (
                 <Skeleton variant="product-card" count={3} />
               ) : (
                 produk.map((item) => (
                   <Card key={item.id} hoverEffect noPadding className="group flex flex-col overflow-hidden border border-slate-100 dark:border-slate-800/80 hover:shadow-lg transition-all duration-300">
-                  <div className="h-48 w-full overflow-hidden relative">
-                    <img
-                      src={item.foto}
-                      alt={item.nama}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 bg-slate-100"
-                    />
-                    <div className="absolute top-3 left-3">
-                      <Badge type="success" variant="solid" className="bg-emerald-600/90 text-[10px]">
-                        {item.kategori}
-                      </Badge>
+                    <div className="h-48 w-full overflow-hidden relative">
+                      <img
+                        src={item.foto}
+                        alt={item.nama}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 bg-slate-100"
+                      />
+                      <div className="absolute top-3 left-3">
+                        <Badge type="success" variant="solid" className="bg-emerald-600/90 text-[10px]">
+                          {item.kategori}
+                        </Badge>
+                      </div>
+                      <div className="absolute bottom-3 right-3 bg-slate-900/80 backdrop-blur-sm text-white px-2.5 py-1 rounded-lg text-xs font-bold border border-white/10">
+                        {item.harga}
+                      </div>
                     </div>
-                    <div className="absolute bottom-3 right-3 bg-slate-900/80 backdrop-blur-sm text-white px-2.5 py-1 rounded-lg text-xs font-bold border border-white/10">
-                      {item.harga}
+                    <div className="p-5 flex-1 flex flex-col justify-between">
+                      <div>
+                        <h4 className="text-base font-bold text-slate-800 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                          {item.nama}
+                        </h4>
+                        <p className="text-xs text-slate-500 dark:text-slate-455 line-clamp-3 leading-relaxed mb-4">
+                          {item.deskripsi}
+                        </p>
+                      </div>
+                      <Link
+                        to={`/pesona-desa/produk-unggulan/${item.id}`}
+                        className="inline-flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline gap-1.5 mt-auto group-hover:text-emerald-700"
+                      >
+                        Beli / Hubungi Penjual
+                        <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                      </Link>
                     </div>
-                  </div>
-                  <div className="p-5 flex-1 flex flex-col justify-between">
-                    <div>
-                      <h4 className="text-base font-bold text-slate-800 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                        {item.nama}
-                      </h4>
-                      <p className="text-xs text-slate-500 dark:text-slate-455 line-clamp-3 leading-relaxed mb-4">
-                        {item.deskripsi}
-                      </p>
-                    </div>
-                    <Link
-                      to={`/pesona-desa/produk-unggulan/${item.id}`}
-                      className="inline-flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline gap-1.5 mt-auto group-hover:text-emerald-700"
-                    >
-                      Beli / Hubungi Penjual
-                      <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </div>
-                </Card>
-              ))
-            )}
+                  </Card>
+                ))
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
       {/* 7. Galeri Singkat */}
       <section className="py-24 bg-slate-50/50 dark:bg-slate-900/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <SectionTitle title="Galeri Kegiatan Desa" subtitle="Dokumentasi aktivitas pemerintahan, keagamaan, sosial budaya, dan gotong-royong warga." align="center" />
-          
+
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
             {[
               {
@@ -547,7 +547,7 @@ export const Beranda: React.FC = () => {
               </div>
             ))}
           </div>
-          
+
           <Link
             to="/galeri"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-emerald-500 hover:from-primary-700 hover:to-emerald-600 text-white font-bold px-6 py-3.5 rounded-xl text-sm shadow-md transition-all duration-300 hover:scale-105 active:scale-95"

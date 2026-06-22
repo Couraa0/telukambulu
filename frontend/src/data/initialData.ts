@@ -210,7 +210,7 @@ export const initialData: DesaDatabase = {
     "sambutan": "Sampurasun, Selamat datang di portal resmi Sistem Informasi Desa Digital Telukambulu. Kami berkomitmen untuk terus menghadirkan keterbukaan informasi publik dan mendekatkan layanan kepada masyarakat melalui platform digital ini. Melalui website ini, warga dapat dengan mudah mengakses berita desa, mengurus keperluan pengaduan, hingga menjelajahi potensi ekonomi kreatif dan wisata sejarah yang kami miliki. Mari bersama-sama membangun Telukambulu yang lebih maju dan sejahtera.",
     "kepalaDesa": {
       "nama": "H. Ahmad Saprudin, S.IP",
-      "foto": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=300",
+      "foto": "/assets/images/kepala-desa.png",
       "periode": "2020 - 2026"
     },
     "petaPlaceholder": "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800",
@@ -230,7 +230,7 @@ export const initialData: DesaDatabase = {
       "id": 1,
       "nama": "H. Ahmad Saprudin, S.IP",
       "jabatan": "Kepala Desa",
-      "foto": "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=300"
+      "foto": "/assets/images/kepala-desa.png"
     },
     {
       "id": 2,
