@@ -8,10 +8,17 @@ import FormInput from '../../components/common/FormInput';
 import TextArea from '../../components/common/TextArea';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
+import { useSEO } from '../../hooks/useSEO';
 import useToast from '../../hooks/useToast';
 import { MapPin, Phone, Mail, Clock, Send, Info, FileText } from 'lucide-react';
 
 export const Kontak: React.FC = () => {
+  useSEO({
+    title: 'Hubungi Kami - Pelayanan Desa Telukambulu',
+    description: 'Ketahui alamat kantor kepala desa, kontak email/telepon resmi, jam operasional pelayanan dokumen, dan formulir pengiriman pesan pengaduan.',
+    keywords: 'Hubungi Desa, Kontak Kantor Desa, Pelayanan Telukambulu, Alamat Batujaya'
+  });
+
   const { showToast } = useToast();
   const [kontak, setKontak] = useState<IKontak | null>(null);
   const [loading, setLoading] = useState(true);

@@ -8,11 +8,18 @@ import FormInput from '../../components/common/FormInput';
 import Button from '../../components/common/Button';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import SectionTitle from '../../components/common/SectionTitle';
+import { useSEO } from '../../hooks/useSEO';
 import useToast from '../../hooks/useToast';
 import { formatDate } from '../../utils/helpers';
 import { Search, Printer, Calendar, MapPin, MessageSquareWarning, ShieldAlert, ArrowLeft } from 'lucide-react';
 
 export const CekPengaduan: React.FC = () => {
+  useSEO({
+    title: 'Lacak Status Pengaduan Anda - Desa Telukambulu',
+    description: 'Masukkan kode tiket laporan pengaduan Anda untuk memeriksa kemajuan penanganan, tanggapan petugas desa, dan riwayat penyelesaian laporan.',
+    keywords: 'Lacak Laporan, Cek Pengaduan, Progres Pengaduan, Tiket Laporan Telukambulu'
+  });
+
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { showToast } = useToast();

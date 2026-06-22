@@ -10,9 +10,16 @@ import SelectInput from '../../components/common/SelectInput';
 import EmptyState from '../../components/common/EmptyState';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
+import { useSEO } from '../../hooks/useSEO';
 import { Trees, ArrowRight, MapPin } from 'lucide-react';
 
 export const SDA: React.FC = () => {
+  useSEO({
+    title: 'Sumber Daya Alam & Potensi Desa Telukambulu',
+    description: 'Katalog potensi alam pendukung roda perekonomian Desa Telukambulu seperti sektor persawahan, irigasi air, pengrajin bambu, dan peternakan lokal.',
+    keywords: 'Sumber Daya Alam, Potensi Desa, Pertanian Telukambulu, Irigasi Karawang'
+  });
+
   const [sda, setSda] = useState<ISDA[]>([]);
   const [filtered, setFiltered] = useState<ISDA[]>([]);
   const [categories, setCategories] = useState<string[]>([]);

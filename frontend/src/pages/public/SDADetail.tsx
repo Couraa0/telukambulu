@@ -7,12 +7,19 @@ import Badge from '../../components/common/Badge';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
 import { ArrowLeft, MapPin, Sparkles, HandHelping, Info } from 'lucide-react';
+import { useSEO } from '../../hooks/useSEO';
 
 export const SDADetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [item, setItem] = useState<ISDA | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useSEO({
+    title: item?.nama ? `${item.nama}` : 'Memuat Potensi SDA...',
+    description: item?.deskripsi || 'Melihat potensi pemanfaatan, manfaat ekonomi, dan rencana pengembangan sumber daya alam di Desa Telukambulu.',
+    keywords: `SDA Desa, ${item?.nama || ''}, Telukambulu, Karawang`
+  });
 
   useEffect(() => {
     if (!id) return;

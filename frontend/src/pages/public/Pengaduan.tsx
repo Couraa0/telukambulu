@@ -8,11 +8,18 @@ import SelectInput from '../../components/common/SelectInput';
 import TextArea from '../../components/common/TextArea';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Modal from '../../components/common/Modal';
+import { useSEO } from '../../hooks/useSEO';
 import useToast from '../../hooks/useToast';
 import { MessageSquareWarning, ShieldCheck, Copy, Check, Ticket } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Pengaduan: React.FC = () => {
+  useSEO({
+    title: 'Layanan Pengaduan Digital - Desa Telukambulu',
+    description: 'Laporkan aspirasi, keluhan kebersihan, kerusakan jalan, atau pelayanan aparatur secara digital dan transparan kepada Pemerintah Desa Telukambulu.',
+    keywords: 'Pengaduan Warga, Laporan Online, Layanan Publik Karawang, Aspirasi Telukambulu'
+  });
+
   const { showToast } = useToast();
   
   // Form State

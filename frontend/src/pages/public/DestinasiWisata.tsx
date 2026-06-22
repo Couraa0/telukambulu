@@ -9,9 +9,16 @@ import SearchBar from '../../components/common/SearchBar';
 import EmptyState from '../../components/common/EmptyState';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
+import { useSEO } from '../../hooks/useSEO';
 import { Palmtree, ArrowRight, MapPin, Clock } from 'lucide-react';
 
 export const DestinasiWisata: React.FC = () => {
+  useSEO({
+    title: 'Destinasi Wisata Desa Telukambulu',
+    description: 'Jelajahi agro-ekowisata persawahan hijau Karawang Utara dan situs cagar budaya percandian Batujaya tertua di Jawa Barat yang berlokasi di Desa Telukambulu.',
+    keywords: 'Wisata Telukambulu, Candi Blandongan Batujaya, Ekowisata Persawahan, Wisata Karawang'
+  });
+
   const [wisata, setWisata] = useState<IWisata[]>([]);
   const [filtered, setFiltered] = useState<IWisata[]>([]);
   const [search, setSearch] = useState('');

@@ -10,10 +10,17 @@ import SelectInput from '../../components/common/SelectInput';
 import EmptyState from '../../components/common/EmptyState';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
+import { useSEO } from '../../hooks/useSEO';
 import { ShoppingBag, ArrowRight, MessageSquare, MapPin } from 'lucide-react';
 import { formatWhatsAppLink } from '../../utils/helpers';
 
 export const ProdukUnggulan: React.FC = () => {
+  useSEO({
+    title: 'Produk Unggulan UMKM - Desa Telukambulu',
+    description: 'Etalase resmi produk lokal karya UMKM Desa Telukambulu seperti anyaman bambu tradisional, beras organik Karawang, dan jajanan kuliner khas warga.',
+    keywords: 'UMKM Telukambulu, Anyaman Bambu Batujaya, Beras Organik Karawang, Produk Lokal Desa'
+  });
+
   const [produk, setProduk] = useState<IProduk[]>([]);
   const [filtered, setFiltered] = useState<IProduk[]>([]);
   const [categories, setCategories] = useState<string[]>([]);

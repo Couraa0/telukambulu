@@ -21,8 +21,15 @@ import Badge from '../../components/common/Badge';
 import { formatDate } from '../../utils/helpers';
 import logoDesa from '../../assets/logo-desa.png';
 import Skeleton from '../../components/common/Skeleton';
+import { useSEO } from '../../hooks/useSEO';
 
 export const Beranda: React.FC = () => {
+  useSEO({
+    title: 'Portal Resmi Desa Telukambulu - Batujaya Karawang',
+    description: 'Selamat datang di website resmi Desa Telukambulu, Kecamatan Batujaya, Kabupaten Karawang. Temukan informasi pelayanan kependudukan, kabar desa, potensi UMKM, destinasi wisata, dan transparansi publik.',
+    keywords: 'Telukambulu, Desa Telukambulu, Batujaya, Karawang, Portal Resmi Desa, UMKM, Wisata Candi Batujaya'
+  });
+
   const [profil, setProfil] = useState<Profil | null>(null);
   const [stats, setStats] = useState<Statistik | null>(null);
   const [berita, setBerita] = useState<Berita[]>([]);

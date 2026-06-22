@@ -6,6 +6,7 @@ import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
+import { useSEO } from '../../hooks/useSEO';
 import { ArrowLeft, MapPin, Clock, CircleDollarSign, Contact, Info } from 'lucide-react';
 
 export const WisataDetail: React.FC = () => {
@@ -13,6 +14,12 @@ export const WisataDetail: React.FC = () => {
   const navigate = useNavigate();
   const [item, setItem] = useState<IWisata | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useSEO({
+    title: item?.nama || 'Memuat Wisata...',
+    description: item?.deskripsi || 'Informasi jam operasional, harga tiket masuk, dan fasilitas destinasi wisata Desa Telukambulu.',
+    keywords: `Wisata Desa, ${item?.nama || ''}, Telukambulu, Karawang`
+  });
 
   useEffect(() => {
     if (!id) return;

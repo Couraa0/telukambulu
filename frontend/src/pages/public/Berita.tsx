@@ -11,10 +11,17 @@ import Pagination from '../../components/common/Pagination';
 import EmptyState from '../../components/common/EmptyState';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
+import { useSEO } from '../../hooks/useSEO';
 import { formatDate } from '../../utils/helpers';
 import { FileText, Calendar, Eye } from 'lucide-react';
 
 export const Berita: React.FC = () => {
+  useSEO({
+    title: 'Kabar & Berita Terkini - Desa Telukambulu',
+    description: 'Ikuti perkembangan berita terbaru, liputan kegiatan warga, proyek pembangunan infrastruktur tani, dan acara sosial kemasyarakatan di Desa Telukambulu.',
+    keywords: 'Berita Desa, Kegiatan Telukambulu, Pembangunan Karawang, Kabar Batujaya'
+  });
+
   const [berita, setBerita] = useState<IBerita[]>([]);
   const [filtered, setFiltered] = useState<IBerita[]>([]);
   const [categories, setCategories] = useState<string[]>([]);

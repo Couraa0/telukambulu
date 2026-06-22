@@ -11,10 +11,17 @@ import Pagination from '../../components/common/Pagination';
 import EmptyState from '../../components/common/EmptyState';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
+import { useSEO } from '../../hooks/useSEO';
 import { formatDate } from '../../utils/helpers';
 import { Megaphone, Calendar } from 'lucide-react';
 
 export const Pengumuman: React.FC = () => {
+  useSEO({
+    title: 'Pengumuman Resmi Desa Telukambulu',
+    description: 'Dapatkan pengumuman kependudukan, jadwal penyaluran bantuan sosial, jadwal gotong royong, dan surat edaran resmi Pemerintah Desa Telukambulu.',
+    keywords: 'Pengumuman Desa, Bantuan Sosial, Edaran Resmi, Batujaya Karawang'
+  });
+
   const [pengumuman, setPengumuman] = useState<IPengumuman[]>([]);
   const [filtered, setFiltered] = useState<IPengumuman[]>([]);
   const [categories, setCategories] = useState<string[]>([]);

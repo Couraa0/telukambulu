@@ -8,10 +8,17 @@ import EmptyState from '../../components/common/EmptyState';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Modal from '../../components/common/Modal';
 import Skeleton from '../../components/common/Skeleton';
+import { useSEO } from '../../hooks/useSEO';
 import { formatDate } from '../../utils/helpers';
 import { Image as ImageIcon, Calendar, X } from 'lucide-react';
 
 export const Galeri: React.FC = () => {
+  useSEO({
+    title: 'Galeri Foto Kegiatan Desa Telukambulu',
+    description: 'Dokumentasi visual rangkaian kegiatan pelayanan Posyandu, gotong royong warga, perayaan hari besar, dan rapat pembangunan Musrenbang Desa Telukambulu.',
+    keywords: 'Galeri Desa, Dokumentasi Kegiatan, Foto Telukambulu, Posyandu Karawang'
+  });
+
   const [galeri, setGaleri] = useState<IGaleri[]>([]);
   const [filtered, setFiltered] = useState<IGaleri[]>([]);
   const [categories, setCategories] = useState<string[]>([]);

@@ -5,9 +5,16 @@ import SectionTitle from '../../components/common/SectionTitle';
 import Card from '../../components/common/Card';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
+import { useSEO } from '../../hooks/useSEO';
 import { MapPin, Users, School, Briefcase, Eye } from 'lucide-react';
 
 export const ProfilDesa: React.FC = () => {
+  useSEO({
+    title: 'Profil & Sejarah Desa Telukambulu',
+    description: 'Pelajari sejarah singkat, visi misi pembangunan, struktur organisasi aparatur pemerintahan, dan informasi demografi kependudukan Desa Telukambulu, Karawang.',
+    keywords: 'Profil Desa, Sejarah Telukambulu, Visi Misi Desa, Aparatur Telukambulu, Demografi Karawang'
+  });
+
   const [profil, setProfil] = useState<Profil | null>(null);
   const [perangkat, setPerangkat] = useState<Perangkat[]>([]);
   const [demografi, setDemografi] = useState<Demografi | null>(null);

@@ -6,6 +6,7 @@ import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
+import { useSEO } from '../../hooks/useSEO';
 import { formatDate } from '../../utils/helpers';
 import { ArrowLeft, Calendar, User, Megaphone } from 'lucide-react';
 
@@ -16,6 +17,12 @@ export const PengumumanDetail: React.FC = () => {
   const [recents, setRecents] = useState<IPengumuman[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  useSEO({
+    title: item?.judul || 'Memuat Pengumuman...',
+    description: item?.ringkasan || 'Membaca detail informasi pengumuman resmi Desa Telukambulu.',
+    keywords: `Pengumuman Desa, ${item?.kategori || ''}, Telukambulu, Karawang`
+  });
 
   useEffect(() => {
     if (!id) return;

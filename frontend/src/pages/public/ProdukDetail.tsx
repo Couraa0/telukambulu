@@ -8,12 +8,19 @@ import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
 import { ArrowLeft, MessageSquare, MapPin, Briefcase, ShoppingBag, Eye } from 'lucide-react';
 import { formatWhatsAppLink } from '../../utils/helpers';
+import { useSEO } from '../../hooks/useSEO';
 
 export const ProdukDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [item, setItem] = useState<IProduk | null>(null);
   const [loading, setLoading] = useState(true);
+
+  useSEO({
+    title: item?.nama ? `${item.nama}` : 'Memuat Produk...',
+    description: item?.deskripsi || 'Detail harga, stok, lokasi usaha, dan hubungi langsung penjual WhatsApp produk lokal Desa Telukambulu.',
+    keywords: `Produk UMKM, ${item?.nama || ''}, Telukambulu, Karawang`
+  });
 
   useEffect(() => {
     if (!id) return;

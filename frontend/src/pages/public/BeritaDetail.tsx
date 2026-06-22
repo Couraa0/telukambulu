@@ -5,6 +5,8 @@ import { Berita as IBerita } from '../../data/initialData';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import Breadcrumb from '../../components/common/Breadcrumb';
+import Skeleton from '../../components/common/Skeleton';
+import { useSEO } from '../../hooks/useSEO';
 import { formatDate } from '../../utils/helpers';
 import { ArrowLeft, Calendar, User, Eye, FileText } from 'lucide-react';
 
@@ -15,6 +17,12 @@ export const BeritaDetail: React.FC = () => {
   const [recents, setRecents] = useState<IBerita[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  useSEO({
+    title: item?.judul || 'Memuat Berita...',
+    description: item?.ringkasan || 'Membaca detail kabar berita resmi dari Desa Telukambulu.',
+    keywords: `Berita Desa, ${item?.kategori || ''}, Telukambulu, Karawang`
+  });
 
   useEffect(() => {
     if (!id) return;
