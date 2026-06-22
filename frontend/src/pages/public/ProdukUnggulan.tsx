@@ -9,6 +9,7 @@ import SearchBar from '../../components/common/SearchBar';
 import SelectInput from '../../components/common/SelectInput';
 import EmptyState from '../../components/common/EmptyState';
 import Breadcrumb from '../../components/common/Breadcrumb';
+import Skeleton from '../../components/common/Skeleton';
 import { ShoppingBag, ArrowRight, MessageSquare, MapPin } from 'lucide-react';
 import { formatWhatsAppLink } from '../../utils/helpers';
 
@@ -46,10 +47,6 @@ export const ProdukUnggulan: React.FC = () => {
     setFiltered(result);
   }, [search, selectedCat, produk]);
 
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-[60vh] text-slate-500">Memuat produk UMKM...</div>;
-  }
-
   return (
     <div className="py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans">
       <Breadcrumb items={[{ label: 'Pesona Desa' }, { label: 'Produk Unggulan' }]} />
@@ -66,7 +63,11 @@ export const ProdukUnggulan: React.FC = () => {
         />
       </div>
 
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Skeleton variant="product-card" count={3} />
+        </div>
+      ) : filtered.length === 0 ? (
         <EmptyState title="Produk tidak ditemukan" icon={ShoppingBag} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

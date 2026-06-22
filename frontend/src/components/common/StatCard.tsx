@@ -42,19 +42,19 @@ export const StatCard: React.FC<StatCardProps> = ({
   };
 
   return (
-    <Card hoverEffect className={`flex items-center gap-4 ${className}`}>
-      <div className={`p-3.5 rounded-2xl ${colorStyles[color].bg}`}>
-        <Icon size={24} className={colorStyles[color].icon} />
+    <Card hoverEffect noPadding className={`flex items-center gap-3 p-3.5 sm:p-4 ${className}`}>
+      <div className={`p-2.5 rounded-xl flex-shrink-0 ${colorStyles[color].bg}`}>
+        <Icon size={20} className={colorStyles[color].icon} />
       </div>
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-0.5">
+      <div className="min-w-0">
+        <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-450 dark:text-slate-500 mb-0.5 truncate">
           {title}
         </p>
-        <h4 className="text-2xl font-bold text-slate-800 dark:text-white font-sans leading-none mb-1">
+        <h4 className="text-lg sm:text-xl font-extrabold text-slate-800 dark:text-white font-sans leading-none">
           {value}
         </h4>
         {description && (
-          <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">
+          <p className="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-0.5 truncate">
             {description}
           </p>
         )}

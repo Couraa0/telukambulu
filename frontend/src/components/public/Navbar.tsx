@@ -2,18 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, Sun, Moon, LogIn, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import logoDesa from '../../assets/logo-desa.png';
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  
+
   const location = useLocation();
   const { user } = useAuth();
 
   // Initialize Dark Mode from localStorage or browser preferences
   useEffect(() => {
-    const isDark = localStorage.getItem('theme') === 'dark' || 
+    const isDark = localStorage.getItem('theme') === 'dark' ||
       (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
     setDarkMode(isDark);
     if (isDark) {
@@ -60,18 +61,20 @@ export const Navbar: React.FC = () => {
     <header className="sticky top-0 z-40 w-full glass shadow-sm no-print">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
-          
+
           {/* Logo & Branding */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary-600 rounded-xl flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-lg shadow-primary-600/20 group-hover:scale-105 transition-all">
-              T
-            </div>
+            <img
+              src={logoDesa}
+              alt="Logo Desa Telukambulu"
+              className="w-10 h-10 sm:w-12 sm:h-12 object-contain group-hover:scale-105 transition-all duration-300"
+            />
             <div>
               <span className="block font-sans font-extrabold text-base sm:text-lg leading-tight text-slate-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                 Telukambulu
               </span>
-              <span className="block text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                Desa Digital • Karawang
+              <span className="block text-[8px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                Kabupaten Karawang
               </span>
             </div>
           </Link>
@@ -80,22 +83,20 @@ export const Navbar: React.FC = () => {
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
             <Link
               to="/"
-              className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all ${
-                isActive('/')
-                  ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
-                  : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
-              }`}
+              className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all ${isActive('/')
+                ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
+                : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
+                }`}
             >
               Beranda
             </Link>
 
             <Link
               to="/profil-desa"
-              className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all ${
-                isActive('/profil-desa')
-                  ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
-                  : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
-              }`}
+              className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all ${isActive('/profil-desa')
+                ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
+                : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
+                }`}
             >
               Profil Desa
             </Link>
@@ -103,11 +104,10 @@ export const Navbar: React.FC = () => {
             {/* Dropdown Informasi */}
             <div className="relative group">
               <button
-                className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all flex items-center gap-1 ${
-                  isSubActive(['/informasi/berita', '/informasi/pengumuman'])
-                    ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
-                    : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
-                }`}
+                className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all flex items-center gap-1 ${isSubActive(['/informasi/berita', '/informasi/pengumuman'])
+                  ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
+                  : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
+                  }`}
               >
                 Informasi Desa
                 <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-200" />
@@ -131,11 +131,10 @@ export const Navbar: React.FC = () => {
             {/* Dropdown Pesona Desa */}
             <div className="relative group">
               <button
-                className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all flex items-center gap-1 ${
-                  isSubActive(['/pesona-desa/sda', '/pesona-desa/produk-unggulan', '/pesona-desa/destinasi-wisata'])
-                    ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
-                    : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
-                }`}
+                className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all flex items-center gap-1 ${isSubActive(['/pesona-desa/sda', '/pesona-desa/produk-unggulan', '/pesona-desa/destinasi-wisata'])
+                  ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
+                  : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
+                  }`}
               >
                 Pesona Desa
                 <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-200" />
@@ -165,11 +164,10 @@ export const Navbar: React.FC = () => {
             {/* Dropdown Pengaduan */}
             <div className="relative group">
               <button
-                className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all flex items-center gap-1 ${
-                  isSubActive(['/pengaduan', '/cek-pengaduan'])
-                    ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
-                    : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
-                }`}
+                className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all flex items-center gap-1 ${isSubActive(['/pengaduan', '/cek-pengaduan'])
+                  ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
+                  : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
+                  }`}
               >
                 Pengaduan
                 <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-200" />
@@ -192,22 +190,20 @@ export const Navbar: React.FC = () => {
 
             <Link
               to="/galeri"
-              className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all ${
-                isActive('/galeri')
-                  ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
-                  : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
-              }`}
+              className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all ${isActive('/galeri')
+                ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
+                : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
+                }`}
             >
               Galeri
             </Link>
 
             <Link
               to="/kontak"
-              className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all ${
-                isActive('/kontak')
-                  ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
-                  : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
-              }`}
+              className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all ${isActive('/kontak')
+                ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
+                : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
+                }`}
             >
               Kontak
             </Link>
@@ -271,18 +267,16 @@ export const Navbar: React.FC = () => {
           <nav className="flex flex-col gap-2.5">
             <Link
               to="/"
-              className={`block px-4 py-3 rounded-xl text-sm font-bold ${
-                isActive('/') ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20' : 'text-slate-700 dark:text-slate-300'
-              }`}
+              className={`block px-4 py-3 rounded-xl text-sm font-bold ${isActive('/') ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20' : 'text-slate-700 dark:text-slate-300'
+                }`}
             >
               Beranda
             </Link>
 
             <Link
               to="/profil-desa"
-              className={`block px-4 py-3 rounded-xl text-sm font-bold ${
-                isActive('/profil-desa') ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20' : 'text-slate-700 dark:text-slate-300'
-              }`}
+              className={`block px-4 py-3 rounded-xl text-sm font-bold ${isActive('/profil-desa') ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20' : 'text-slate-700 dark:text-slate-300'
+                }`}
             >
               Profil Desa
             </Link>
@@ -376,18 +370,16 @@ export const Navbar: React.FC = () => {
 
             <Link
               to="/galeri"
-              className={`block px-4 py-3 rounded-xl text-sm font-bold ${
-                isActive('/galeri') ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20' : 'text-slate-700 dark:text-slate-300'
-              }`}
+              className={`block px-4 py-3 rounded-xl text-sm font-bold ${isActive('/galeri') ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20' : 'text-slate-700 dark:text-slate-300'
+                }`}
             >
               Galeri
             </Link>
 
             <Link
               to="/kontak"
-              className={`block px-4 py-3 rounded-xl text-sm font-bold ${
-                isActive('/kontak') ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20' : 'text-slate-700 dark:text-slate-300'
-              }`}
+              className={`block px-4 py-3 rounded-xl text-sm font-bold ${isActive('/kontak') ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20' : 'text-slate-700 dark:text-slate-300'
+                }`}
             >
               Kontak
             </Link>

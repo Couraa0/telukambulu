@@ -8,6 +8,7 @@ import Badge from '../../components/common/Badge';
 import SearchBar from '../../components/common/SearchBar';
 import EmptyState from '../../components/common/EmptyState';
 import Breadcrumb from '../../components/common/Breadcrumb';
+import Skeleton from '../../components/common/Skeleton';
 import { Palmtree, ArrowRight, MapPin, Clock } from 'lucide-react';
 
 export const DestinasiWisata: React.FC = () => {
@@ -37,10 +38,6 @@ export const DestinasiWisata: React.FC = () => {
     setFiltered(result);
   }, [search, wisata]);
 
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-[60vh] text-slate-500">Memuat destinasi wisata...</div>;
-  }
-
   return (
     <div className="py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans">
       <Breadcrumb items={[{ label: 'Pesona Desa' }, { label: 'Destinasi Wisata' }]} />
@@ -50,7 +47,11 @@ export const DestinasiWisata: React.FC = () => {
         <SearchBar value={search} onChange={setSearch} placeholder="Cari destinasi wisata..." />
       </div>
 
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Skeleton variant="wisata-card" count={3} />
+        </div>
+      ) : filtered.length === 0 ? (
         <EmptyState title="Destinasi wisata tidak ditemukan" icon={Palmtree} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

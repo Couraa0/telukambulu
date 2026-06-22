@@ -5,6 +5,7 @@ import { Wisata as IWisata } from '../../data/initialData';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import Breadcrumb from '../../components/common/Breadcrumb';
+import Skeleton from '../../components/common/Skeleton';
 import { ArrowLeft, MapPin, Clock, CircleDollarSign, Contact, Info } from 'lucide-react';
 
 export const WisataDetail: React.FC = () => {
@@ -23,11 +24,7 @@ export const WisataDetail: React.FC = () => {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-[60vh] text-slate-500">Memuat detail wisata...</div>;
-  }
-
-  if (!item) {
+  if (!loading && !item) {
     return (
       <div className="py-12 max-w-xl mx-auto px-4 text-center font-sans">
         <Card className="p-8">
@@ -35,7 +32,7 @@ export const WisataDetail: React.FC = () => {
             <Info size={28} />
           </div>
           <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">Destinasi Tidak Ditemukan</h3>
-          <p className="text-sm text-slate-550 dark:text-slate-450 mb-6">Destinasi wisata yang Anda cari tidak tersedia.</p>
+          <p className="text-sm text-slate-550 dark:text-slate-455 mb-6">Destinasi wisata yang Anda cari tidak tersedia.</p>
           <button onClick={() => navigate('/pesona-desa/destinasi-wisata')} className="bg-primary-600 hover:bg-primary-700 text-white font-bold px-4 py-2 text-sm rounded-xl">
             Kembali ke Wisata
           </button>
@@ -50,7 +47,7 @@ export const WisataDetail: React.FC = () => {
         items={[
           { label: 'Pesona Desa', path: '/pesona-desa/destinasi-wisata' },
           { label: 'Destinasi Wisata', path: '/pesona-desa/destinasi-wisata' },
-          { label: item.nama }
+          { label: item?.nama || 'Memuat detail wisata...' }
         ]}
       />
 
@@ -66,64 +63,97 @@ export const WisataDetail: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12">
           {/* Cover Photo */}
           <div className="lg:col-span-5 h-64 lg:h-auto min-h-[300px]">
-            <img src={item.foto} alt={item.nama} className="w-full h-full object-cover bg-slate-100" />
+            {loading ? (
+              <div className="w-full h-full bg-slate-200 dark:bg-emerald-950/20 animate-pulse" />
+            ) : item && (
+              <img src={item.foto} alt={item.nama} className="w-full h-full object-cover bg-slate-100" />
+            )}
           </div>
 
           {/* Details */}
           <div className="lg:col-span-7 p-6 sm:p-8 flex flex-col justify-between gap-6">
-            <div>
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white mb-3">
-                {item.nama}
-              </h1>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                <MapPin size={16} className="text-slate-400" />
-                {item.lokasi}
-              </p>
-            </div>
+            {loading ? (
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <div className="h-7 w-2/3 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                  <div className="h-4 w-1/3 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                </div>
+                <div className="border-t border-slate-100 dark:border-slate-800 pt-5 space-y-2">
+                  <div className="h-4 w-1/4 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                  <div className="h-4 w-full bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                </div>
+                <div className="grid grid-cols-3 gap-4 border-t border-slate-100 dark:border-slate-800 pt-5">
+                  <div className="h-10 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                  <div className="h-10 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                  <div className="h-10 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                </div>
+              </div>
+            ) : item && (
+              <>
+                <div>
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white mb-3">
+                    {item.nama}
+                  </h1>
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                    <MapPin size={16} className="text-slate-400" />
+                    {item.lokasi}
+                  </p>
+                </div>
 
-            <div className="border-t border-slate-100 dark:border-slate-800/80 pt-5">
-              <h4 className="text-sm font-bold text-slate-855 dark:text-white mb-2 font-sans">Deskripsi Wisata</h4>
-              <p className="text-sm text-slate-600 dark:text-slate-350 leading-relaxed">{item.deskripsi}</p>
-            </div>
+                <div className="border-t border-slate-100 dark:border-slate-800/80 pt-5">
+                  <h4 className="text-sm font-bold text-slate-855 dark:text-white mb-2 font-sans">Deskripsi Wisata</h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-350 leading-relaxed">{item.deskripsi}</p>
+                </div>
 
-            {/* Practical information grids */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 border-t border-slate-100 dark:border-slate-800/80 pt-5 text-xs sm:text-sm">
-              <div className="flex flex-col gap-2">
-                <span className="font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1">
-                  <Clock size={14} />
-                  Jam Operasional
-                </span>
-                <span className="text-slate-700 dark:text-slate-300 font-semibold">{item.operasional}</span>
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1">
-                  <CircleDollarSign size={14} />
-                  Harga Tiket Masuk
-                </span>
-                <span className="text-primary-700 dark:text-primary-400 font-bold">{item.tiket}</span>
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1">
-                  <Contact size={14} />
-                  Kontak Pengelola
-                </span>
-                <span className="text-slate-705 dark:text-slate-305 font-medium">{item.kontak}</span>
-              </div>
-            </div>
+                {/* Practical information grids */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 border-t border-slate-100 dark:border-slate-800/80 pt-5 text-xs sm:text-sm">
+                  <div className="flex flex-col gap-2">
+                    <span className="font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                      <Clock size={14} />
+                      Jam Operasional
+                    </span>
+                    <span className="text-slate-707 dark:text-slate-300 font-semibold">{item.operasional}</span>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <span className="font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                      <CircleDollarSign size={14} />
+                      Harga Tiket Masuk
+                    </span>
+                    <span className="text-primary-700 dark:text-primary-400 font-bold">{item.tiket}</span>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <span className="font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                      <Contact size={14} />
+                      Kontak Pengelola
+                    </span>
+                    <span className="text-slate-705 dark:text-slate-305 font-medium">{item.kontak}</span>
+                  </div>
+                </div>
 
-            {/* Facilities */}
-            {item.fasilitas && (
-              <div className="border-t border-slate-100 dark:border-slate-800/80 pt-5 text-xs sm:text-sm">
-                <span className="block font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-2">Fasilitas</span>
-                <span className="text-slate-655 dark:text-slate-355 leading-relaxed">{item.fasilitas}</span>
-              </div>
+                {/* Facilities */}
+                {item.fasilitas && (
+                  <div className="border-t border-slate-100 dark:border-slate-800/80 pt-5 text-xs sm:text-sm">
+                    <span className="block font-bold text-slate-450 dark:text-slate-500 uppercase tracking-wider mb-2">Fasilitas</span>
+                    <span className="text-slate-655 dark:text-slate-355 leading-relaxed">{item.fasilitas}</span>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
       </Card>
 
       {/* Sub-Gallery */}
-      {item.galeri && item.galeri.length > 0 && (
+      {loading ? (
+        <div className="space-y-4">
+          <div className="h-5 w-44 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+          <div className="grid grid-cols-4 gap-4 animate-pulse">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-44 sm:h-52 bg-slate-200 dark:bg-emerald-950/25 rounded-2xl" />
+            ))}
+          </div>
+        </div>
+      ) : item && item.galeri && item.galeri.length > 0 && (
         <div>
           <h3 className="text-base sm:text-lg font-bold text-slate-850 dark:text-white uppercase tracking-wider mb-4 border-l-4 border-primary-600 pl-3">
             Galeri Foto Wisata

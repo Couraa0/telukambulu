@@ -7,6 +7,7 @@ import Badge from '../../components/common/Badge';
 import EmptyState from '../../components/common/EmptyState';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Modal from '../../components/common/Modal';
+import Skeleton from '../../components/common/Skeleton';
 import { formatDate } from '../../utils/helpers';
 import { Image as ImageIcon, Calendar, X } from 'lucide-react';
 
@@ -39,10 +40,6 @@ export const Galeri: React.FC = () => {
       setFiltered(galeri);
     }
   }, [selectedCat, galeri]);
-
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-[60vh] text-slate-500">Memuat galeri desa...</div>;
-  }
 
   return (
     <div className="py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans">
@@ -77,7 +74,11 @@ export const Galeri: React.FC = () => {
       </div>
 
       {/* Photo Grid */}
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <Skeleton variant="news-card" count={4} />
+        </div>
+      ) : filtered.length === 0 ? (
         <EmptyState title="Foto kegiatan tidak ditemukan" icon={ImageIcon} />
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -108,7 +109,7 @@ export const Galeri: React.FC = () => {
                     {item.judul}
                   </h4>
                 </div>
-                <span className="text-[10px] text-slate-400 font-bold flex items-center gap-1">
+                <span className="text-[10px] text-slate-450 font-semibold flex items-center gap-1">
                   <Calendar size={12} />
                   {formatDate(item.tanggal)}
                 </span>
@@ -138,7 +139,7 @@ export const Galeri: React.FC = () => {
               <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2 leading-snug">
                 {selectedItem.judul}
               </h3>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-450 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-455 leading-relaxed">
                 {selectedItem.deskripsi}
               </p>
             </div>

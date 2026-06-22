@@ -9,6 +9,7 @@ import SearchBar from '../../components/common/SearchBar';
 import SelectInput from '../../components/common/SelectInput';
 import EmptyState from '../../components/common/EmptyState';
 import Breadcrumb from '../../components/common/Breadcrumb';
+import Skeleton from '../../components/common/Skeleton';
 import { Trees, ArrowRight, MapPin } from 'lucide-react';
 
 export const SDA: React.FC = () => {
@@ -45,10 +46,6 @@ export const SDA: React.FC = () => {
     setFiltered(result);
   }, [search, selectedCat, sda]);
 
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-[60vh] text-slate-500">Memuat potensi alam...</div>;
-  }
-
   return (
     <div className="py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans">
       <Breadcrumb items={[{ label: 'Pesona Desa' }, { label: 'Sumber Daya Alam' }]} />
@@ -65,7 +62,11 @@ export const SDA: React.FC = () => {
         />
       </div>
 
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Skeleton variant="news-card" count={3} />
+        </div>
+      ) : filtered.length === 0 ? (
         <EmptyState title="Potensi alam tidak ditemukan" icon={Trees} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

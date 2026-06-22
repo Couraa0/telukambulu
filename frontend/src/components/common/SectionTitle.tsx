@@ -19,7 +19,7 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
         {title}
       </h2>
       {subtitle && (
-        <p className="mt-2.5 text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
+        <p className={`mt-2.5 text-sm sm:text-base text-slate-500 dark:text-slate-400 max-w-2xl ${align === 'center' ? 'mx-auto' : 'mr-auto'}`}>
           {subtitle}
         </p>
       )}

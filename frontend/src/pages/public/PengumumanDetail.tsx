@@ -5,6 +5,7 @@ import { Pengumuman as IPengumuman } from '../../data/initialData';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import Breadcrumb from '../../components/common/Breadcrumb';
+import Skeleton from '../../components/common/Skeleton';
 import { formatDate } from '../../utils/helpers';
 import { ArrowLeft, Calendar, User, Megaphone } from 'lucide-react';
 
@@ -38,15 +39,7 @@ export const PengumumanDetail: React.FC = () => {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh] text-slate-500">
-        Memuat detail pengumuman...
-      </div>
-    );
-  }
-
-  if (error || !item) {
+  if (!loading && (error || !item)) {
     return (
       <div className="py-12 max-w-xl mx-auto px-4 text-center font-sans">
         <Card className="p-8">
@@ -72,7 +65,7 @@ export const PengumumanDetail: React.FC = () => {
         items={[
           { label: 'Informasi', path: '/informasi/pengumuman' },
           { label: 'Pengumuman', path: '/informasi/pengumuman' },
-          { label: item.judul }
+          { label: item?.judul || 'Memuat detail pengumuman...' }
         ]}
       />
 
@@ -88,35 +81,50 @@ export const PengumumanDetail: React.FC = () => {
         
         {/* Detail Content */}
         <article className="lg:col-span-8">
-          <Card className="print-card">
-            {/* Meta attributes */}
-            <div className="flex flex-wrap items-center gap-3.5 mb-4">
-              <Badge type="info" variant="soft">
-                {item.kategori}
-              </Badge>
-              {item.penting && (
-                <Badge type="danger" variant="solid" className="text-[10px] px-2 py-0.5 animate-pulse">
-                  PENTING
+          {loading ? (
+            <Card className="space-y-4">
+              <div className="flex gap-3">
+                <div className="h-5 w-16 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                <div className="h-5 w-24 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+              </div>
+              <div className="h-8 w-11/12 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+              <div className="border-t border-slate-100 dark:border-slate-800 pt-6 space-y-2">
+                <div className="h-4 w-full bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                <div className="h-4 w-full bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                <div className="h-4 w-5/6 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+              </div>
+            </Card>
+          ) : item && (
+            <Card className="print-card">
+              {/* Meta attributes */}
+              <div className="flex flex-wrap items-center gap-3.5 mb-4">
+                <Badge type="info" variant="soft">
+                  {item.kategori}
                 </Badge>
-              )}
-              <span className="text-xs text-slate-400 flex items-center gap-1">
-                <Calendar size={14} />
-                {formatDate(item.tanggal)}
-              </span>
-              <span className="text-xs text-slate-400 flex items-center gap-1">
-                <User size={14} />
-                Pemerintah Desa
-              </span>
-            </div>
+                {item.penting && (
+                  <Badge type="danger" variant="solid" className="text-[10px] px-2 py-0.5 animate-pulse">
+                    PENTING
+                  </Badge>
+                )}
+                <span className="text-xs text-slate-400 flex items-center gap-1">
+                  <Calendar size={14} />
+                  {formatDate(item.tanggal)}
+                </span>
+                <span className="text-xs text-slate-400 flex items-center gap-1">
+                  <User size={14} />
+                  Pemerintah Desa
+                </span>
+              </div>
 
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white mb-6 leading-snug font-sans">
-              {item.judul}
-            </h1>
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white mb-6 leading-snug font-sans">
+                {item.judul}
+              </h1>
 
-            <div className="prose dark:prose-invert max-w-none text-slate-655 dark:text-slate-300 text-sm sm:text-base leading-relaxed whitespace-pre-wrap border-t border-slate-100 dark:border-slate-800 pt-6">
-              {item.isi}
-            </div>
-          </Card>
+              <div className="prose dark:prose-invert max-w-none text-slate-655 dark:text-slate-350 text-sm sm:text-base leading-relaxed whitespace-pre-wrap border-t border-slate-100 dark:border-slate-800 pt-6">
+                {item.isi}
+              </div>
+            </Card>
+          )}
         </article>
 
         {/* Side Widget Recents */}
@@ -126,7 +134,16 @@ export const PengumumanDetail: React.FC = () => {
               Pengumuman Lainnya
             </h3>
             
-            {recents.length === 0 ? (
+            {loading ? (
+              <div className="flex flex-col gap-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="space-y-2 pb-3 border-b border-slate-100 dark:border-slate-850 last:border-none animate-pulse">
+                    <div className="h-3 w-1/4 bg-slate-200 dark:bg-emerald-950/25 rounded" />
+                    <div className="h-4 w-5/6 bg-slate-200 dark:bg-emerald-950/25 rounded" />
+                  </div>
+                ))}
+              </div>
+            ) : recents.length === 0 ? (
               <p className="text-xs text-slate-400">Tidak ada pengumuman lain.</p>
             ) : (
               <div className="flex flex-col gap-4">

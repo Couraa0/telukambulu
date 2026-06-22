@@ -42,15 +42,7 @@ export const BeritaDetail: React.FC = () => {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh] text-slate-500">
-        Memuat detail berita...
-      </div>
-    );
-  }
-
-  if (error || !item) {
+  if (!loading && (error || !item)) {
     return (
       <div className="py-12 max-w-xl mx-auto px-4 text-center font-sans">
         <Card className="p-8">
@@ -76,7 +68,7 @@ export const BeritaDetail: React.FC = () => {
         items={[
           { label: 'Informasi', path: '/informasi/berita' },
           { label: 'Berita', path: '/informasi/berita' },
-          { label: item.judul }
+          { label: item?.judul || 'Memuat detail berita...' }
         ]}
       />
 
@@ -92,43 +84,61 @@ export const BeritaDetail: React.FC = () => {
         
         {/* Detail Content */}
         <article className="lg:col-span-8">
-          <Card noPadding className="print-card overflow-hidden">
-            {/* Banner Image */}
-            <img
-              src={item.gambar}
-              alt={item.judul}
-              className="w-full h-64 sm:h-96 object-cover bg-slate-100"
-            />
-            
-            <div className="p-5 sm:p-8">
-              {/* Meta attributes */}
-              <div className="flex flex-wrap items-center gap-3.5 mb-4 border-b border-slate-100 dark:border-slate-800 pb-4">
-                <Badge type="success" variant="soft">
-                  {item.kategori}
-                </Badge>
-                <span className="text-xs text-slate-400 flex items-center gap-1">
-                  <Calendar size={14} />
-                  {formatDate(item.tanggal)}
-                </span>
-                <span className="text-xs text-slate-400 flex items-center gap-1">
-                  <User size={14} />
-                  {item.penulis}
-                </span>
-                <span className="text-xs text-slate-400 flex items-center gap-1">
-                  <Eye size={14} />
-                  {item.views || 0} Kali Dibaca
-                </span>
+          {loading ? (
+            <Card noPadding className="overflow-hidden">
+              <div className="w-full h-64 sm:h-96 bg-slate-200 dark:bg-emerald-950/20 animate-pulse" />
+              <div className="p-5 sm:p-8 space-y-4">
+                <div className="flex gap-3">
+                  <div className="h-5 w-16 bg-slate-200 dark:bg-emerald-950/25 rounded-full animate-pulse" />
+                  <div className="h-5 w-24 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                </div>
+                <div className="h-8 w-11/12 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                <div className="space-y-2 pt-4">
+                  <div className="h-4 w-full bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                  <div className="h-4 w-full bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                  <div className="h-4 w-4/5 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                </div>
               </div>
+            </Card>
+          ) : item && (
+            <Card noPadding className="print-card overflow-hidden">
+              {/* Banner Image */}
+              <img
+                src={item.gambar}
+                alt={item.judul}
+                className="w-full h-64 sm:h-96 object-cover bg-slate-100"
+              />
+              
+              <div className="p-5 sm:p-8">
+                {/* Meta attributes */}
+                <div className="flex flex-wrap items-center gap-3.5 mb-4 border-b border-slate-100 dark:border-slate-800 pb-4">
+                  <Badge type="success" variant="soft">
+                    {item.kategori}
+                  </Badge>
+                  <span className="text-xs text-slate-400 flex items-center gap-1">
+                    <Calendar size={14} />
+                    {formatDate(item.tanggal)}
+                  </span>
+                  <span className="text-xs text-slate-400 flex items-center gap-1">
+                    <User size={14} />
+                    {item.penulis}
+                  </span>
+                  <span className="text-xs text-slate-400 flex items-center gap-1">
+                    <Eye size={14} />
+                    {item.views || 0} Kali Dibaca
+                  </span>
+                </div>
 
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white mb-6 leading-snug font-sans">
-                {item.judul}
-              </h1>
+                <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white mb-6 leading-snug font-sans">
+                  {item.judul}
+                </h1>
 
-              <div className="prose dark:prose-invert max-w-none text-slate-655 dark:text-slate-350 text-sm sm:text-base leading-relaxed whitespace-pre-wrap">
-                {item.isi}
+                <div className="prose dark:prose-invert max-w-none text-slate-655 dark:text-slate-350 text-sm sm:text-base leading-relaxed whitespace-pre-wrap">
+                  {item.isi}
+                </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+          )}
         </article>
 
         {/* Side Widget Recents */}
@@ -138,7 +148,19 @@ export const BeritaDetail: React.FC = () => {
               Berita Lainnya
             </h3>
             
-            {recents.length === 0 ? (
+            {loading ? (
+              <div className="flex flex-col gap-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex gap-3 animate-pulse">
+                    <div className="w-16 h-16 bg-slate-200 dark:bg-emerald-950/25 rounded-xl flex-shrink-0" />
+                    <div className="flex-1 space-y-2 py-1">
+                      <div className="h-3 w-1/3 bg-slate-200 dark:bg-emerald-950/25 rounded" />
+                      <div className="h-4 w-5/6 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : recents.length === 0 ? (
               <p className="text-xs text-slate-400">Tidak ada berita lain.</p>
             ) : (
               <div className="flex flex-col gap-4">

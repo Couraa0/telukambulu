@@ -10,6 +10,7 @@ import SelectInput from '../../components/common/SelectInput';
 import Pagination from '../../components/common/Pagination';
 import EmptyState from '../../components/common/EmptyState';
 import Breadcrumb from '../../components/common/Breadcrumb';
+import Skeleton from '../../components/common/Skeleton';
 import { formatDate } from '../../utils/helpers';
 import { FileText, Calendar, Eye } from 'lucide-react';
 
@@ -79,14 +80,6 @@ export const Berita: React.FC = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedItems = filtered.slice(startIndex, startIndex + itemsPerPage);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh] text-slate-500">
-        Memuat berita...
-      </div>
-    );
-  }
-
   return (
     <div className="py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans">
       <Breadcrumb items={[{ label: 'Informasi' }, { label: 'Berita' }]} />
@@ -118,7 +111,11 @@ export const Berita: React.FC = () => {
       </div>
 
       {/* Grid List */}
-      {paginatedItems.length === 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Skeleton variant="news-card" count={6} />
+        </div>
+      ) : paginatedItems.length === 0 ? (
         <EmptyState title="Berita tidak ditemukan" description="Coba ubah kata kunci pencarian atau bersihkan filter untuk melihat semua berita." icon={FileText} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -166,7 +163,7 @@ export const Berita: React.FC = () => {
       )}
 
       {/* Pagination */}
-      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+      {!loading && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />}
     </div>
   );
 };

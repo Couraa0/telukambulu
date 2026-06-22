@@ -5,6 +5,7 @@ import { SDA as ISDA } from '../../data/initialData';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import Breadcrumb from '../../components/common/Breadcrumb';
+import Skeleton from '../../components/common/Skeleton';
 import { ArrowLeft, MapPin, Sparkles, HandHelping, Info } from 'lucide-react';
 
 export const SDADetail: React.FC = () => {
@@ -23,11 +24,7 @@ export const SDADetail: React.FC = () => {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-[60vh] text-slate-500">Memuat detail potensi...</div>;
-  }
-
-  if (!item) {
+  if (!loading && !item) {
     return (
       <div className="py-12 max-w-xl mx-auto px-4 text-center font-sans">
         <Card className="p-8">
@@ -50,7 +47,7 @@ export const SDADetail: React.FC = () => {
         items={[
           { label: 'Pesona Desa', path: '/pesona-desa/sda' },
           { label: 'Sumber Daya Alam', path: '/pesona-desa/sda' },
-          { label: item.nama }
+          { label: item?.nama || 'Memuat detail potensi...' }
         ]}
       />
 
@@ -66,43 +63,73 @@ export const SDADetail: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12">
           {/* Image */}
           <div className="lg:col-span-5 h-64 lg:h-auto min-h-[300px]">
-            <img src={item.foto} alt={item.nama} className="w-full h-full object-cover bg-slate-100" />
+            {loading ? (
+              <div className="w-full h-full bg-slate-200 dark:bg-emerald-950/20 animate-pulse" />
+            ) : item && (
+              <img src={item.foto} alt={item.nama} className="w-full h-full object-cover bg-slate-100" />
+            )}
           </div>
           
           {/* Details */}
           <div className="lg:col-span-7 p-6 sm:p-8 flex flex-col gap-6">
-            <div>
-              <Badge type="success" variant="soft" className="mb-2">{item.kategori}</Badge>
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white mb-3">
-                {item.nama}
-              </h1>
-              <p className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                <MapPin size={16} className="text-slate-400" />
-                {item.lokasi}
-              </p>
-            </div>
-
-            <div className="border-t border-slate-100 dark:border-slate-800/80 pt-5">
-              <h4 className="text-sm font-bold text-slate-850 dark:text-white mb-2">Deskripsi Alam</h4>
-              <p className="text-sm text-slate-600 dark:text-slate-350 leading-relaxed">{item.deskripsi}</p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 border-t border-slate-100 dark:border-slate-800/80 pt-5">
-              <div>
-                <h4 className="text-sm font-bold text-slate-850 dark:text-white mb-2 flex items-center gap-2">
-                  <HandHelping size={16} className="text-primary-655" />
-                  Manfaat & Kegunaan
-                </h4>
-                <p className="text-xs sm:text-sm text-slate-550 dark:text-slate-400 leading-relaxed">{item.manfaat}</p>
+            {loading ? (
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <div className="h-5 w-16 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                  <div className="h-7 w-2/3 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                  <div className="h-4 w-1/3 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                </div>
+                <div className="border-t border-slate-100 dark:border-slate-800 pt-5 space-y-2">
+                  <div className="h-4 w-1/4 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                  <div className="h-4 w-full bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                </div>
+                <div className="grid grid-cols-2 gap-4 border-t border-slate-100 dark:border-slate-800 pt-5">
+                  <div className="space-y-2">
+                    <div className="h-4 w-1/2 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                    <div className="h-4 w-full bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-4 w-1/2 bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                    <div className="h-4 w-full bg-slate-200 dark:bg-emerald-950/25 rounded animate-pulse" />
+                  </div>
+                </div>
               </div>
-              <div>
-                <h4 className="text-sm font-bold text-slate-850 dark:text-white mb-2 flex items-center gap-2">
-                  <Sparkles size={16} className="text-accent-600" />
-                  Potensi Pengembangan
-                </h4>
-                <p className="text-xs sm:text-sm text-slate-550 dark:text-slate-400 leading-relaxed">{item.potensi}</p>
-              </div>
-            </div>
+            ) : item && (
+              <>
+                <div>
+                  <Badge type="success" variant="soft" className="mb-2">{item.kategori}</Badge>
+                  <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white mb-3">
+                    {item.nama}
+                  </h1>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                    <MapPin size={16} className="text-slate-400" />
+                    {item.lokasi}
+                  </p>
+                </div>
+
+                <div className="border-t border-slate-100 dark:border-slate-800/80 pt-5">
+                  <h4 className="text-sm font-bold text-slate-850 dark:text-white mb-2">Deskripsi Alam</h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-350 leading-relaxed">{item.deskripsi}</p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 border-t border-slate-100 dark:border-slate-800/80 pt-5">
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-850 dark:text-white mb-2 flex items-center gap-2">
+                      <HandHelping size={16} className="text-primary-655" />
+                      Manfaat & Kegunaan
+                    </h4>
+                    <p className="text-xs sm:text-sm text-slate-550 dark:text-slate-400 leading-relaxed">{item.manfaat}</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-850 dark:text-white mb-2 flex items-center gap-2">
+                      <Sparkles size={16} className="text-accent-600" />
+                      Potensi Pengembangan
+                    </h4>
+                    <p className="text-xs sm:text-sm text-slate-550 dark:text-slate-400 leading-relaxed">{item.potensi}</p>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </Card>

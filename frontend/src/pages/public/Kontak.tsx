@@ -7,6 +7,7 @@ import Button from '../../components/common/Button';
 import FormInput from '../../components/common/FormInput';
 import TextArea from '../../components/common/TextArea';
 import Breadcrumb from '../../components/common/Breadcrumb';
+import Skeleton from '../../components/common/Skeleton';
 import useToast from '../../hooks/useToast';
 import { MapPin, Phone, Mail, Clock, Send, Info, FileText } from 'lucide-react';
 
@@ -68,10 +69,6 @@ export const Kontak: React.FC = () => {
     }, 1000);
   };
 
-  if (loading) {
-    return <div className="flex items-center justify-center min-h-[60vh] text-slate-500">Memuat kontak desa...</div>;
-  }
-
   return (
     <div className="py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans">
       <Breadcrumb items={[{ label: 'Hubungi Kami' }]} />
@@ -86,38 +83,46 @@ export const Kontak: React.FC = () => {
               Informasi Kantor
             </h3>
 
-            <ul className="flex flex-col gap-5 text-xs sm:text-sm text-slate-655 dark:text-slate-400">
-              <li className="flex gap-3">
-                <MapPin size={18} className="text-primary-600 mt-0.5 flex-shrink-0" />
-                <span className="leading-relaxed">{kontak?.alamat}</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone size={16} className="text-primary-600 flex-shrink-0" />
-                <span>{kontak?.telepon}</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail size={16} className="text-primary-600 flex-shrink-0" />
-                <span>{kontak?.email}</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Clock size={16} className="text-primary-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <span className="block font-bold text-slate-700 dark:text-slate-300">Jam Operasional Pelayanan:</span>
-                  <span className="block text-xs mt-0.5">{kontak?.jamPelayanan}</span>
-                </div>
-              </li>
-            </ul>
+            {loading ? (
+              <Skeleton variant="text" count={2} />
+            ) : (
+              <ul className="flex flex-col gap-5 text-xs sm:text-sm text-slate-655 dark:text-slate-400">
+                <li className="flex gap-3">
+                  <MapPin size={18} className="text-primary-600 mt-0.5 flex-shrink-0" />
+                  <span className="leading-relaxed">{kontak?.alamat}</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Phone size={16} className="text-primary-600 flex-shrink-0" />
+                  <span>{kontak?.telepon}</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Mail size={16} className="text-primary-600 flex-shrink-0" />
+                  <span>{kontak?.email}</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Clock size={16} className="text-primary-600 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <span className="block font-bold text-slate-700 dark:text-slate-300">Jam Operasional Pelayanan:</span>
+                    <span className="block text-xs mt-0.5">{kontak?.jamPelayanan}</span>
+                  </div>
+                </li>
+              </ul>
+            )}
           </Card>
 
           {/* Maps Iframe */}
           <Card noPadding className="overflow-hidden h-72">
-            <iframe
-              title="Lokasi Kantor Desa"
-              src={kontak?.mapsLink}
-              className="w-full h-full border-none"
-              allowFullScreen={false}
-              loading="lazy"
-            ></iframe>
+            {loading ? (
+              <div className="w-full h-full bg-slate-200 dark:bg-emerald-950/20 animate-pulse" />
+            ) : (
+              <iframe
+                title="Lokasi Kantor Desa"
+                src={kontak?.mapsLink}
+                className="w-full h-full border-none"
+                allowFullScreen={false}
+                loading="lazy"
+              ></iframe>
+            )}
           </Card>
         </div>
 
@@ -130,20 +135,24 @@ export const Kontak: React.FC = () => {
               Persyaratan Administrasi Kependudukan
             </h3>
 
-            <div className="flex flex-col gap-4">
-              {kontak?.layananAdministrasi.map((item, idx) => (
-                <div key={idx} className="border-b border-slate-100 dark:border-slate-800/80 pb-3.5 last:border-none last:pb-0 text-xs sm:text-sm">
-                  <h4 className="font-bold text-slate-800 dark:text-white flex items-center gap-2 mb-1.5">
-                    <FileText size={16} className="text-secondary-500" />
-                    {item.layanan}
-                  </h4>
-                  <p className="text-slate-500 dark:text-slate-400 pl-6 leading-relaxed">
-                    <span className="font-semibold text-slate-400 uppercase tracking-widest text-[9px] mr-1 block sm:inline">Persyaratan:</span>
-                    {item.syarat}
-                  </p>
-                </div>
-              ))}
-            </div>
+            {loading ? (
+              <Skeleton variant="list" count={1} />
+            ) : (
+              <div className="flex flex-col gap-4">
+                {kontak?.layananAdministrasi?.map((item, idx) => (
+                  <div key={idx} className="border-b border-slate-100 dark:border-slate-800/80 pb-3.5 last:border-none last:pb-0 text-xs sm:text-sm">
+                    <h4 className="font-bold text-slate-880 dark:text-white flex items-center gap-2 mb-1.5">
+                      <FileText size={16} className="text-secondary-500" />
+                      {item.layanan}
+                    </h4>
+                    <p className="text-slate-500 dark:text-slate-400 pl-6 leading-relaxed">
+                      <span className="font-semibold text-slate-400 uppercase tracking-widest text-[9px] mr-1 block sm:inline">Persyaratan:</span>
+                      {item.syarat}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </Card>
 
           {/* Form Card */}
