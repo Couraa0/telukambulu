@@ -15,6 +15,21 @@ app.use((req, res, next) => {
   next();
 });
 
+// Root / Home endpoints
+app.get('/', (req, res) => {
+  res.json({
+    message: "Welcome to Desa Digital Telukambulu API",
+    status: "active"
+  });
+});
+
+app.get('/api', (req, res) => {
+  res.json({
+    message: "Desa Digital Telukambulu API Endpoint",
+    status: "active"
+  });
+});
+
 // Configure Multer for memory storage
 const upload = multer({
   storage: multer.memoryStorage(),
