@@ -55,11 +55,6 @@ export const Login: React.FC = () => {
     }
   };
 
-  // Helper autofill credentials
-  const handleAutofill = (u: string, p: string) => {
-    setUsername(u);
-    setPassword(p);
-  };
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-12 bg-slate-950 font-sans selection:bg-emerald-500/30 selection:text-emerald-300">
@@ -242,56 +237,6 @@ export const Login: React.FC = () => {
               </button>
             </form>
 
-            {/* Quick Autofill Access */}
-            <div className="mt-8 border-t border-slate-800/80 pt-6">
-              <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-1.5 justify-center">
-                <ShieldCheck size={14} className="text-emerald-555" />
-                Akses Uji Coba (Autofill):
-              </h4>
-              <div className="grid grid-cols-2 gap-2.5">
-                
-                {/* Super Admin */}
-                <button
-                  type="button"
-                  onClick={() => handleAutofill('superadmin', 'admin123')}
-                  className="group flex flex-col items-center bg-slate-950/55 hover:bg-amber-500/5 border border-slate-800 hover:border-amber-500/35 p-2 rounded-xl transition-all duration-200"
-                >
-                  <span className="text-[10px] font-bold text-amber-400 group-hover:text-amber-300">Super Admin</span>
-                  <span className="text-[8px] text-slate-500 group-hover:text-slate-405 mt-0.5">Kades H. Ahmad</span>
-                </button>
-
-                {/* Admin Konten */}
-                <button
-                  type="button"
-                  onClick={() => handleAutofill('konten', 'konten123')}
-                  className="group flex flex-col items-center bg-slate-950/55 hover:bg-sky-500/5 border border-slate-800 hover:border-sky-500/35 p-2 rounded-xl transition-all duration-200"
-                >
-                  <span className="text-[10px] font-bold text-sky-400 group-hover:text-sky-300">Admin Konten</span>
-                  <span className="text-[8px] text-slate-500 group-hover:text-slate-405 mt-0.5">Sekdes Mulyadi</span>
-                </button>
-
-                {/* Admin Pengaduan */}
-                <button
-                  type="button"
-                  onClick={() => handleAutofill('pengaduan', 'adu123')}
-                  className="group flex flex-col items-center bg-slate-950/55 hover:bg-violet-500/5 border border-slate-800 hover:border-violet-500/35 p-2 rounded-xl transition-all duration-200"
-                >
-                  <span className="text-[10px] font-bold text-violet-400 group-hover:text-violet-300">Admin Pengaduan</span>
-                  <span className="text-[8px] text-slate-500 group-hover:text-slate-405 mt-0.5">Kurniawan</span>
-                </button>
-
-                {/* Admin Profil */}
-                <button
-                  type="button"
-                  onClick={() => handleAutofill('profil', 'profil123')}
-                  className="group flex flex-col items-center bg-slate-950/55 hover:bg-emerald-500/5 border border-slate-800 hover:border-emerald-500/35 p-2 rounded-xl transition-all duration-200"
-                >
-                  <span className="text-[10px] font-bold text-emerald-400 group-hover:text-emerald-300">Admin Profil</span>
-                  <span className="text-[8px] text-slate-500 group-hover:text-slate-405 mt-0.5">Siti Aminah</span>
-                </button>
-
-              </div>
-            </div>
 
           </div>
 
