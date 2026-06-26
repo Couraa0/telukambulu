@@ -6,7 +6,7 @@ import Card from '../../components/common/Card';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
 import { useSEO } from '../../hooks/useSEO';
-import { MapPin, Users, School, Briefcase, Eye } from 'lucide-react';
+import { MapPin, Users, School, Briefcase } from 'lucide-react';
 
 export const ProfilDesa: React.FC = () => {
   useSEO({

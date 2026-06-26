@@ -3,7 +3,7 @@ import { Outlet, Navigate, useLocation, Link } from 'react-router-dom';
 import Sidebar from '../components/admin/Sidebar';
 import Header from '../components/admin/Header';
 import { useAuth } from '../context/AuthContext';
-import { ShieldAlert, Home } from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
 
 export const AdminLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);

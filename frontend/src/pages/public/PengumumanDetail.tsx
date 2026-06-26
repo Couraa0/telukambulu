@@ -5,7 +5,6 @@ import { Pengumuman as IPengumuman } from '../../data/initialData';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import Breadcrumb from '../../components/common/Breadcrumb';
-import Skeleton from '../../components/common/Skeleton';
 import { useSEO } from '../../hooks/useSEO';
 import { formatDate } from '../../utils/helpers';
 import { ArrowLeft, Calendar, User, Megaphone } from 'lucide-react';

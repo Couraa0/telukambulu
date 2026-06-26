@@ -11,7 +11,9 @@ import Modal from '../../components/common/Modal';
 import Badge from '../../components/common/Badge';
 import SearchBar from '../../components/common/SearchBar';
 import useToast from '../../hooks/useToast';
-import { ShoppingBag, Plus, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Edit2, Trash2 } from 'lucide-react';
+import ImageUpload from '../../components/common/ImageUpload';
+
 
 export const AdminProduk: React.FC = () => {
   const { showToast } = useToast();
@@ -276,13 +278,12 @@ export const AdminProduk: React.FC = () => {
             />
           </div>
 
-          <FormInput
-            label="URL Foto Produk"
-            name="foto"
+          <ImageUpload
+            label="Foto Produk"
             value={form.foto}
-            onChange={handleInputChange}
-            placeholder="Contoh: https://images.unsplash.com/..."
+            onChange={(url) => setForm(prev => ({ ...prev, foto: url }))}
           />
+
 
           <TextArea
             label="Deskripsi Detail Produk"

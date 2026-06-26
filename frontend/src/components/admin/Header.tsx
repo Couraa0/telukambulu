@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, Globe, User, LogOut } from 'lucide-react';
+import { Menu, Globe, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export interface HeaderProps {
@@ -14,7 +14,7 @@ export const Header: React.FC<HeaderProps> = ({
   sidebarOpen,
   setSidebarOpen,
 }) => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   
   const today = new Date().toLocaleDateString('id-ID', {
     weekday: 'long',

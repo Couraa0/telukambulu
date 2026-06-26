@@ -15,7 +15,7 @@ import {
   UserAdmin
 } from '../data/initialData';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 // Initialize LocalStorage with fallback data if empty
 const initLocalStorage = (): void => {
@@ -867,5 +867,23 @@ export const api = {
       const filtered = current.filter(i => i.id !== id);
       setLocal('users', filtered);
     }
+  },
+  uploadImage: async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await fetch(`${API_BASE}/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || 'Gagal mengunggah gambar.');
+    }
+
+    const data = await response.json();
+    return data.url;
   }
 };
+

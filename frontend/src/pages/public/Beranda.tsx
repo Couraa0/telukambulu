@@ -8,9 +8,7 @@ import {
   Palmtree,
   ArrowRight,
   Megaphone,
-  FileText,
-  ShoppingBag,
-  HeartHandshake
+  ShoppingBag
 } from 'lucide-react';
 import { api } from '../../services/api';
 import { Profil, Statistik, Berita, Pengumuman, Produk, Wisata } from '../../data/initialData';
@@ -171,10 +169,8 @@ export const Beranda: React.FC = () => {
                     <span className="block text-xs font-bold text-slate-900 dark:text-white whitespace-nowrap">UMKM Beras Organik</span>
                   </div>
                 </div>
-
               </div>
             </div>
-
           </div>
         </div>
       </section>

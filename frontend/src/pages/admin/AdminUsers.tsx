@@ -9,7 +9,7 @@ import Table from '../../components/common/Table';
 import Modal from '../../components/common/Modal';
 import Badge from '../../components/common/Badge';
 import useToast from '../../hooks/useToast';
-import { Users, Plus, Edit2, Trash2, ShieldAlert } from 'lucide-react';
+import { Plus, Edit2, Trash2, ShieldAlert } from 'lucide-react';
 
 export const AdminUsers: React.FC = () => {
   const { showToast } = useToast();

@@ -13,7 +13,7 @@ import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
 import { useSEO } from '../../hooks/useSEO';
 import { formatDate } from '../../utils/helpers';
-import { FileText, Calendar, Eye } from 'lucide-react';
+import { FileText, Eye } from 'lucide-react';
 
 export const Berita: React.FC = () => {
   useSEO({

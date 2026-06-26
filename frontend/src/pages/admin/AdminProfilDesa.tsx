@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../services/api';
-import { Profil, Perangkat, Demografi, DusunDemografi, DemografiItem } from '../../data/initialData';
+import { Profil, Perangkat, Demografi, DusunDemografi } from '../../data/initialData';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import FormInput from '../../components/common/FormInput';
@@ -9,7 +9,6 @@ import Table from '../../components/common/Table';
 import Modal from '../../components/common/Modal';
 import useToast from '../../hooks/useToast';
 import {
-  FileText,
   Users,
   Plus,
   Edit2,
@@ -21,6 +20,8 @@ import {
   Briefcase,
   Layers
 } from 'lucide-react';
+import ImageUpload from '../../components/common/ImageUpload';
+
 
 export const AdminProfilDesa: React.FC = () => {
   const { showToast } = useToast();
@@ -354,11 +355,13 @@ export const AdminProfilDesa: React.FC = () => {
                 value={profilForm.kepalaDesa.periode}
                 onChange={handleProfilChange}
               />
-              <FormInput
-                label="URL Foto Kepala Desa"
-                name="kades_foto"
+              <ImageUpload
+                label="Foto Kepala Desa"
                 value={profilForm.kepalaDesa.foto}
-                onChange={handleProfilChange}
+                onChange={(url) => setProfilForm(prev => prev ? ({
+                  ...prev,
+                  kepalaDesa: { ...prev.kepalaDesa, foto: url }
+                }) : null)}
               />
             </div>
           </div>
@@ -367,12 +370,12 @@ export const AdminProfilDesa: React.FC = () => {
           <div className="border-t border-slate-100 dark:border-slate-800 pt-5">
             <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-4">Aset Geografis & Foto Kantor</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-              <FormInput
-                label="URL Foto Kantor Desa"
-                name="fotoKantor"
+              <ImageUpload
+                label="Foto Kantor Desa"
                 value={profilForm.fotoKantor}
-                onChange={handleProfilChange}
+                onChange={(url) => setProfilForm(prev => prev ? ({ ...prev, fotoKantor: url }) : null)}
               />
+
               <FormInput
                 label="URL Embed Peta Google Maps"
                 name="petaLink"
@@ -584,13 +587,12 @@ export const AdminProfilDesa: React.FC = () => {
             placeholder="Contoh: Kaur Keuangan"
             required
           />
-          <FormInput
-            label="URL Foto Profil"
-            name="foto"
+          <ImageUpload
+            label="Foto Profil Aparatur"
             value={perangkatForm.foto}
-            onChange={handlePerangkatFormChange}
-            placeholder="Contoh: https://images.unsplash.com/..."
+            onChange={(url) => setPerangkatForm(prev => ({ ...prev, foto: url }))}
           />
+
           <div className="flex justify-end gap-3 border-t border-slate-105 pt-4 mt-2">
             <Button variant="outline" size="sm" onClick={() => setPerangkatModal(false)}>
               Batal

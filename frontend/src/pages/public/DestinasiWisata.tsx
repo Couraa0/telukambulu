@@ -4,13 +4,12 @@ import { api } from '../../services/api';
 import { Wisata as IWisata } from '../../data/initialData';
 import SectionTitle from '../../components/common/SectionTitle';
 import Card from '../../components/common/Card';
-import Badge from '../../components/common/Badge';
 import SearchBar from '../../components/common/SearchBar';
 import EmptyState from '../../components/common/EmptyState';
 import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
 import { useSEO } from '../../hooks/useSEO';
-import { Palmtree, ArrowRight, MapPin, Clock } from 'lucide-react';
+import { Palmtree, MapPin, Clock } from 'lucide-react';
 
 export const DestinasiWisata: React.FC = () => {
   useSEO({

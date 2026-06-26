@@ -9,7 +9,9 @@ import Table from '../../components/common/Table';
 import Modal from '../../components/common/Modal';
 import SearchBar from '../../components/common/SearchBar';
 import useToast from '../../hooks/useToast';
-import { Palmtree, Plus, Edit2, Trash2, Clock } from 'lucide-react';
+import { Plus, Edit2, Trash2, Clock } from 'lucide-react';
+import ImageUpload from '../../components/common/ImageUpload';
+
 
 export const AdminWisata: React.FC = () => {
   const { showToast } = useToast();
@@ -240,13 +242,12 @@ export const AdminWisata: React.FC = () => {
             />
           </div>
 
-          <FormInput
-            label="URL Foto Utama"
-            name="foto"
+          <ImageUpload
+            label="Foto Utama Destinasi"
             value={form.foto}
-            onChange={handleInputChange}
-            placeholder="Contoh: https://images.unsplash.com/..."
+            onChange={(url) => setForm(prev => ({ ...prev, foto: url }))}
           />
+
 
           <TextArea
             label="Fasilitas yang Tersedia"

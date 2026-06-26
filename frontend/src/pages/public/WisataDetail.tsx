@@ -3,9 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 import { Wisata as IWisata } from '../../data/initialData';
 import Card from '../../components/common/Card';
-import Badge from '../../components/common/Badge';
 import Breadcrumb from '../../components/common/Breadcrumb';
-import Skeleton from '../../components/common/Skeleton';
 import { useSEO } from '../../hooks/useSEO';
 import { ArrowLeft, MapPin, Clock, CircleDollarSign, Contact, Info } from 'lucide-react';
 

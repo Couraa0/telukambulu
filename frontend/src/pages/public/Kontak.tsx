@@ -10,7 +10,7 @@ import Breadcrumb from '../../components/common/Breadcrumb';
 import Skeleton from '../../components/common/Skeleton';
 import { useSEO } from '../../hooks/useSEO';
 import useToast from '../../hooks/useToast';
-import { MapPin, Phone, Mail, Clock, Send, Info, FileText } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, FileText } from 'lucide-react';
 
 export const Kontak: React.FC = () => {
   useSEO({

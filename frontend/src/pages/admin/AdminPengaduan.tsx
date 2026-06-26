@@ -14,7 +14,7 @@ import SearchBar from '../../components/common/SearchBar';
 import Pagination from '../../components/common/Pagination';
 import useToast from '../../hooks/useToast';
 import { formatDate, exportToCSV } from '../../utils/helpers';
-import { MessageSquareWarning, Search, Eye, RefreshCw, Download, Printer, MapPin, Calendar, ClipboardList } from 'lucide-react';
+import { Eye, RefreshCw, Download, Printer, MapPin, Calendar } from 'lucide-react';
 
 export const AdminPengaduan: React.FC = () => {
   const { showToast } = useToast();

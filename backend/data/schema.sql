@@ -1,4 +1,18 @@
 -- SCHEMA FOR DESA DIGITAL TELUKAMBULU DATABASE
+-- DROP TABLE IF EXISTS commands for clean reset/re-seeding
+DROP TABLE IF EXISTS galeri CASCADE;
+DROP TABLE IF EXISTS pengaduan CASCADE;
+DROP TABLE IF EXISTS wisata CASCADE;
+DROP TABLE IF EXISTS produk CASCADE;
+DROP TABLE IF EXISTS sda CASCADE;
+DROP TABLE IF EXISTS berita CASCADE;
+DROP TABLE IF EXISTS pengumuman CASCADE;
+DROP TABLE IF EXISTS perangkat CASCADE;
+DROP TABLE IF EXISTS statistik CASCADE;
+DROP TABLE IF EXISTS demografi CASCADE;
+DROP TABLE IF EXISTS kontak CASCADE;
+DROP TABLE IF EXISTS profil CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 
 -- 1. Users Table
 CREATE TABLE IF NOT EXISTS users (
@@ -16,10 +30,12 @@ CREATE TABLE IF NOT EXISTS profil (
     sambutan TEXT,
     nama_kades VARCHAR(255),
     foto_kades TEXT,
+    periode_kades VARCHAR(100),
     sejarah TEXT,
     visi TEXT,
     misi JSONB,
-    peta_wilayah TEXT
+    peta_wilayah TEXT,
+    foto_kantor TEXT
 );
 
 -- 3. Kontak Table
@@ -41,7 +57,7 @@ CREATE TABLE IF NOT EXISTS demografi (
     wanita INTEGER DEFAULT 0,
     pekerjaan JSONB,
     pendidikan JSONB,
-    usia JSONB
+    dusun_list JSONB
 );
 
 -- 5. Statistik Table (Stored/cached counters)
@@ -99,7 +115,8 @@ CREATE TABLE IF NOT EXISTS sda (
     potensi VARCHAR(255),
     deskripsi TEXT,
     foto TEXT,
-    satuan VARCHAR(50)
+    manfaat TEXT,
+    lokasi TEXT
 );
 
 -- 10. Produk UMKM Table
@@ -111,7 +128,9 @@ CREATE TABLE IF NOT EXISTS produk (
     penjual VARCHAR(255),
     kontak VARCHAR(50),
     foto TEXT,
-    kategori VARCHAR(100)
+    kategori VARCHAR(100),
+    stok VARCHAR(100),
+    lokasi TEXT
 );
 
 -- 11. Wisata Table
@@ -122,7 +141,10 @@ CREATE TABLE IF NOT EXISTS wisata (
     lokasi TEXT,
     harga_tiket VARCHAR(100) DEFAULT '0',
     foto TEXT,
-    galeri JSONB
+    galeri JSONB,
+    fasilitas TEXT,
+    operasional TEXT,
+    kontak VARCHAR(100)
 );
 
 -- 12. Pengaduan Table
@@ -153,3 +175,35 @@ CREATE TABLE IF NOT EXISTS galeri (
     kategori VARCHAR(100) NOT NULL,
     tanggal DATE DEFAULT CURRENT_DATE
 );
+
+-- DISABLE ROW LEVEL SECURITY (RLS) for public client operations
+ALTER TABLE users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE profil DISABLE ROW LEVEL SECURITY;
+ALTER TABLE kontak DISABLE ROW LEVEL SECURITY;
+ALTER TABLE demografi DISABLE ROW LEVEL SECURITY;
+ALTER TABLE statistik DISABLE ROW LEVEL SECURITY;
+ALTER TABLE perangkat DISABLE ROW LEVEL SECURITY;
+ALTER TABLE pengumuman DISABLE ROW LEVEL SECURITY;
+ALTER TABLE berita DISABLE ROW LEVEL SECURITY;
+ALTER TABLE sda DISABLE ROW LEVEL SECURITY;
+ALTER TABLE produk DISABLE ROW LEVEL SECURITY;
+ALTER TABLE wisata DISABLE ROW LEVEL SECURITY;
+ALTER TABLE pengaduan DISABLE ROW LEVEL SECURITY;
+ALTER TABLE galeri DISABLE ROW LEVEL SECURITY;
+
+-- ENABLE/CREATE STORAGE BUCKET FOR IMAGES
+-- (This inserts into storage.buckets. If the bucket already exists, it is ignored)
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('images', 'images', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Policies for public uploads/downloads
+DROP POLICY IF EXISTS "Allow public select" ON storage.objects;
+DROP POLICY IF EXISTS "Allow public insert" ON storage.objects;
+DROP POLICY IF EXISTS "Allow public update" ON storage.objects;
+DROP POLICY IF EXISTS "Allow public delete" ON storage.objects;
+
+CREATE POLICY "Allow public select" ON storage.objects FOR SELECT USING (bucket_id = 'images');
+CREATE POLICY "Allow public insert" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'images');
+CREATE POLICY "Allow public update" ON storage.objects FOR UPDATE USING (bucket_id = 'images');
+CREATE POLICY "Allow public delete" ON storage.objects FOR DELETE USING (bucket_id = 'images');

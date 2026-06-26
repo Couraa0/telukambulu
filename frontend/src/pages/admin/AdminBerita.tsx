@@ -13,7 +13,9 @@ import SearchBar from '../../components/common/SearchBar';
 import Pagination from '../../components/common/Pagination';
 import useToast from '../../hooks/useToast';
 import { formatDate } from '../../utils/helpers';
-import { FileText, Plus, Edit2, Trash2, Calendar, Eye } from 'lucide-react';
+import { Plus, Edit2, Trash2, Calendar, Eye } from 'lucide-react';
+import ImageUpload from '../../components/common/ImageUpload';
+
 
 export const AdminBerita: React.FC = () => {
   const { showToast } = useToast();
@@ -295,14 +297,13 @@ export const AdminBerita: React.FC = () => {
             />
           </div>
 
-          <FormInput
-            label="URL Gambar Utama"
-            name="gambar"
+          <ImageUpload
+            label="Gambar Utama Berita"
             value={form.gambar}
-            onChange={handleInputChange}
-            placeholder="Contoh: https://images.unsplash.com/..."
+            onChange={(url) => setForm(prev => ({ ...prev, gambar: url }))}
             required
           />
+
 
           <FormInput
             label="Ringkasan Berita"

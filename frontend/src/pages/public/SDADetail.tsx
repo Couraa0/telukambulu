@@ -5,7 +5,6 @@ import { SDA as ISDA } from '../../data/initialData';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import Breadcrumb from '../../components/common/Breadcrumb';
-import Skeleton from '../../components/common/Skeleton';
 import { ArrowLeft, MapPin, Sparkles, HandHelping, Info } from 'lucide-react';
 import { useSEO } from '../../hooks/useSEO';
 

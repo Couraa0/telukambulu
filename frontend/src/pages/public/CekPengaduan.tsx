@@ -11,7 +11,7 @@ import SectionTitle from '../../components/common/SectionTitle';
 import { useSEO } from '../../hooks/useSEO';
 import useToast from '../../hooks/useToast';
 import { formatDate } from '../../utils/helpers';
-import { Search, Printer, Calendar, MapPin, MessageSquareWarning, ShieldAlert, ArrowLeft } from 'lucide-react';
+import { Search, Printer, MapPin, ShieldAlert, ArrowLeft } from 'lucide-react';
 
 export const CekPengaduan: React.FC = () => {
   useSEO({

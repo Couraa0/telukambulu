@@ -12,7 +12,9 @@ import Badge from '../../components/common/Badge';
 import SearchBar from '../../components/common/SearchBar';
 import useToast from '../../hooks/useToast';
 import { formatDate } from '../../utils/helpers';
-import { Image as ImageIcon, Plus, Edit2, Trash2, Calendar } from 'lucide-react';
+import { Plus, Edit2, Trash2, Calendar } from 'lucide-react';
+import ImageUpload from '../../components/common/ImageUpload';
+
 
 export const AdminGaleri: React.FC = () => {
   const { showToast } = useToast();
@@ -241,14 +243,13 @@ export const AdminGaleri: React.FC = () => {
             />
           </div>
 
-          <FormInput
-            label="URL Foto Aset"
-            name="foto"
+          <ImageUpload
+            label="Foto Dokumentasi Acara"
             value={form.foto}
-            onChange={handleInputChange}
-            placeholder="Contoh: https://images.unsplash.com/..."
+            onChange={(url) => setForm(prev => ({ ...prev, foto: url }))}
             required
           />
+
 
           <TextArea
             label="Deskripsi Singkat Acara"

@@ -11,7 +11,6 @@ import {
   ShieldCheck, 
   ArrowLeft, 
   Globe, 
-  Activity,
   Server
 } from 'lucide-react';
 import logoDesa from '../../assets/logo-desa.png';

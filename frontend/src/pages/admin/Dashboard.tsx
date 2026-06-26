@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
-import { Statistik, Berita, Pengaduan, UserAdmin } from '../../data/initialData';
+import { Statistik, Berita, Pengaduan } from '../../data/initialData';
 import StatCard from '../../components/common/StatCard';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
@@ -12,7 +12,6 @@ import {
   MessageSquareWarning,
   ShieldCheck,
   ShoppingBag,
-  Palmtree,
   Plus,
   ArrowRight,
   Eye,

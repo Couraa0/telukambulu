@@ -11,7 +11,9 @@ import Modal from '../../components/common/Modal';
 import Badge from '../../components/common/Badge';
 import SearchBar from '../../components/common/SearchBar';
 import useToast from '../../hooks/useToast';
-import { Trees, Plus, Edit2, Trash2, MapPin } from 'lucide-react';
+import { Plus, Edit2, Trash2, MapPin } from 'lucide-react';
+import ImageUpload from '../../components/common/ImageUpload';
+
 
 export const AdminSDA: React.FC = () => {
   const { showToast } = useToast();
@@ -236,13 +238,12 @@ export const AdminSDA: React.FC = () => {
             />
           </div>
 
-          <FormInput
-            label="URL Foto Aset"
-            name="foto"
+          <ImageUpload
+            label="Foto Aset Potensi Alam"
             value={form.foto}
-            onChange={handleInputChange}
-            placeholder="Contoh: https://images.unsplash.com/..."
+            onChange={(url) => setForm(prev => ({ ...prev, foto: url }))}
           />
+
 
           <TextArea
             label="Deskripsi Lengkap"

@@ -13,7 +13,7 @@ import SearchBar from '../../components/common/SearchBar';
 import Pagination from '../../components/common/Pagination';
 import useToast from '../../hooks/useToast';
 import { formatDate } from '../../utils/helpers';
-import { Megaphone, Plus, Edit2, Trash2, Calendar } from 'lucide-react';
+import { Plus, Edit2, Trash2, Calendar } from 'lucide-react';
 
 export const AdminPengumuman: React.FC = () => {
   const { showToast } = useToast();

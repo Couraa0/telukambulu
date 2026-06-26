@@ -46,6 +46,22 @@ export const Navbar: React.FC = () => {
     setActiveDropdown(null);
   }, [location.pathname]);
 
+  // Handle click outside to close dropdowns on desktop
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (window.innerWidth >= 1024) {
+        if (!target.closest('.desktop-dropdown')) {
+          setActiveDropdown(null);
+        }
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const isActive = (path: string) => location.pathname === path;
   const isSubActive = (paths: string[]) => paths.includes(location.pathname);
 
@@ -102,25 +118,28 @@ export const Navbar: React.FC = () => {
             </Link>
 
             {/* Dropdown Informasi */}
-            <div className="relative group">
+            <div className="relative desktop-dropdown">
               <button
+                onClick={() => toggleDropdown('informasi')}
                 className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all flex items-center gap-1 ${isSubActive(['/informasi/berita', '/informasi/pengumuman'])
                   ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
                   : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
                   }`}
               >
                 Informasi Desa
-                <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-200" />
+                <ChevronDown size={14} className={`transition-transform duration-200 ${activeDropdown === 'informasi' ? 'rotate-180' : ''}`} />
               </button>
-              <div className="absolute left-0 mt-1.5 w-48 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-xl py-1 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-150 transform origin-top scale-95 group-hover:scale-100">
+              <div className={`absolute left-0 mt-1.5 w-48 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-xl py-1 transition-all duration-150 transform origin-top ${activeDropdown === 'informasi' ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}>
                 <Link
                   to="/informasi/berita"
+                  onClick={() => setActiveDropdown(null)}
                   className="block px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 hover:text-primary-600 dark:hover:text-primary-400"
                 >
                   Berita Desa
                 </Link>
                 <Link
                   to="/informasi/pengumuman"
+                  onClick={() => setActiveDropdown(null)}
                   className="block px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 hover:text-primary-600 dark:hover:text-primary-400"
                 >
                   Pengumuman
@@ -129,31 +148,35 @@ export const Navbar: React.FC = () => {
             </div>
 
             {/* Dropdown Pesona Desa */}
-            <div className="relative group">
+            <div className="relative desktop-dropdown">
               <button
+                onClick={() => toggleDropdown('pesona')}
                 className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all flex items-center gap-1 ${isSubActive(['/pesona-desa/sda', '/pesona-desa/produk-unggulan', '/pesona-desa/destinasi-wisata'])
                   ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
                   : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
                   }`}
               >
                 Pesona Desa
-                <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-200" />
+                <ChevronDown size={14} className={`transition-transform duration-200 ${activeDropdown === 'pesona' ? 'rotate-180' : ''}`} />
               </button>
-              <div className="absolute left-0 mt-1.5 w-52 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-xl py-1 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-150 transform origin-top scale-95 group-hover:scale-100">
+              <div className={`absolute left-0 mt-1.5 w-52 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-xl py-1 transition-all duration-150 transform origin-top ${activeDropdown === 'pesona' ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}>
                 <Link
                   to="/pesona-desa/sda"
+                  onClick={() => setActiveDropdown(null)}
                   className="block px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 hover:text-primary-600 dark:hover:text-primary-400"
                 >
                   Sumber Daya Alam
                 </Link>
                 <Link
                   to="/pesona-desa/produk-unggulan"
+                  onClick={() => setActiveDropdown(null)}
                   className="block px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 hover:text-primary-600 dark:hover:text-primary-400"
                 >
                   Produk Unggulan UMKM
                 </Link>
                 <Link
                   to="/pesona-desa/destinasi-wisata"
+                  onClick={() => setActiveDropdown(null)}
                   className="block px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 hover:text-primary-600 dark:hover:text-primary-400"
                 >
                   Destinasi Wisata
@@ -162,25 +185,28 @@ export const Navbar: React.FC = () => {
             </div>
 
             {/* Dropdown Pengaduan */}
-            <div className="relative group">
+            <div className="relative desktop-dropdown">
               <button
+                onClick={() => toggleDropdown('pengaduan')}
                 className={`px-3 py-2 text-sm font-semibold rounded-xl transition-all flex items-center gap-1 ${isSubActive(['/pengaduan', '/cek-pengaduan'])
                   ? 'text-primary-600 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/20'
                   : 'text-slate-600 hover:text-primary-600 dark:text-slate-350 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-900/50'
                   }`}
               >
                 Pengaduan
-                <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-200" />
+                <ChevronDown size={14} className={`transition-transform duration-200 ${activeDropdown === 'pengaduan' ? 'rotate-180' : ''}`} />
               </button>
-              <div className="absolute left-0 mt-1.5 w-48 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-xl py-1 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-150 transform origin-top scale-95 group-hover:scale-100">
+              <div className={`absolute left-0 mt-1.5 w-48 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-xl py-1 transition-all duration-150 transform origin-top ${activeDropdown === 'pengaduan' ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}>
                 <Link
                   to="/pengaduan"
+                  onClick={() => setActiveDropdown(null)}
                   className="block px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 hover:text-primary-600 dark:hover:text-primary-400"
                 >
                   Ajukan Pengaduan
                 </Link>
                 <Link
                   to="/cek-pengaduan"
+                  onClick={() => setActiveDropdown(null)}
                   className="block px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-850 hover:text-primary-600 dark:hover:text-primary-400"
                 >
                   Cek Tiket Status
@@ -224,8 +250,9 @@ export const Navbar: React.FC = () => {
             {user ? (
               <Link
                 to="/admin/dashboard"
-                className="inline-flex items-center gap-2 bg-secondary-650 hover:bg-secondary-600 text-white font-semibold px-4 py-2.5 rounded-xl shadow-md transition-all text-sm"
+                className="inline-flex items-center gap-2 bg-secondary-600 hover:bg-secondary-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-md transition-all text-sm"
               >
+
                 <LayoutDashboard size={16} />
                 Dashboard Admin
               </Link>

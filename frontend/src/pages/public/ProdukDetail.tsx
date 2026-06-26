@@ -5,8 +5,7 @@ import { Produk as IProduk } from '../../data/initialData';
 import Card from '../../components/common/Card';
 import Badge from '../../components/common/Badge';
 import Breadcrumb from '../../components/common/Breadcrumb';
-import Skeleton from '../../components/common/Skeleton';
-import { ArrowLeft, MessageSquare, MapPin, Briefcase, ShoppingBag, Eye } from 'lucide-react';
+import { ArrowLeft, MessageSquare, MapPin, Briefcase, ShoppingBag } from 'lucide-react';
 import { formatWhatsAppLink } from '../../utils/helpers';
 import { useSEO } from '../../hooks/useSEO';
 

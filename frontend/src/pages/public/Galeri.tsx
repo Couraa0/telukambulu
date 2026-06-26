@@ -10,7 +10,7 @@ import Modal from '../../components/common/Modal';
 import Skeleton from '../../components/common/Skeleton';
 import { useSEO } from '../../hooks/useSEO';
 import { formatDate } from '../../utils/helpers';
-import { Image as ImageIcon, Calendar, X } from 'lucide-react';
+import { Image as ImageIcon, Calendar } from 'lucide-react';
 
 export const Galeri: React.FC = () => {
   useSEO({
