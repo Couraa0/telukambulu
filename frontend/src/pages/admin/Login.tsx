@@ -11,7 +11,9 @@ import {
   ShieldCheck, 
   ArrowLeft, 
   Globe, 
-  Server
+  Server,
+  Sun,
+  Moon
 } from 'lucide-react';
 import logoDesa from '../../assets/logo-desa.png';
 
@@ -25,6 +27,7 @@ export const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Redirect path
   const from = (location.state as any)?.from?.pathname || '/admin/dashboard';
@@ -35,6 +38,34 @@ export const Login: React.FC = () => {
       navigate('/admin/dashboard', { replace: true });
     }
   }, [user, navigate]);
+
+  // Load and apply theme from localStorage or preferred scheme
+  useEffect(() => {
+    const isDark = localStorage.getItem('theme') === 'dark' ||
+      (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    setIsDarkMode(isDark);
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newDark = !isDarkMode;
+    setIsDarkMode(newDark);
+    if (newDark) {
+      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,9 +86,8 @@ export const Login: React.FC = () => {
     }
   };
 
-
   return (
-    <div className="min-h-screen grid grid-cols-1 md:grid-cols-12 bg-slate-950 font-sans selection:bg-emerald-500/30 selection:text-emerald-300">
+    <div className="min-h-screen grid grid-cols-1 md:grid-cols-12 bg-slate-50 dark:bg-slate-950 font-sans selection:bg-emerald-500/30 selection:text-emerald-300 transition-colors duration-300">
       
       {/* LEFT VISUAL PANEL (Desktop Only) */}
       <div className="hidden md:flex md:col-span-5 lg:col-span-5 h-full relative overflow-hidden flex-col justify-between p-10 lg:p-12 select-none">
@@ -119,21 +149,30 @@ export const Login: React.FC = () => {
       </div>
 
       {/* RIGHT LOGIN FORM PANEL (Mobile & Desktop) */}
-      <div className="col-span-12 md:col-span-7 lg:col-span-7 flex flex-col justify-center items-center p-6 sm:p-12 relative overflow-hidden min-h-screen">
+      <div className="col-span-12 md:col-span-7 lg:col-span-7 flex flex-col justify-center items-center p-6 sm:p-12 relative overflow-hidden min-h-screen transition-colors duration-300">
         
         {/* Glow ambient effects */}
-        <div className="absolute top-1/4 left-1/4 w-[350px] h-[350px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] bg-teal-500/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/4 w-[350px] h-[350px] bg-emerald-500/[0.04] dark:bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] bg-teal-500/[0.04] dark:bg-teal-500/10 rounded-full blur-[120px] pointer-events-none" />
 
-        {/* Back link */}
-        <div className="absolute top-6 left-6 z-20">
+        {/* Top bar controls */}
+        <div className="absolute top-6 left-6 right-6 flex justify-between items-center z-20">
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-200 transition-colors uppercase tracking-wider group"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors uppercase tracking-wider group"
           >
             <ArrowLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
             Kembali ke Web Publik
           </Link>
+          
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/80 shadow-sm transition-all duration-200"
+            title={isDarkMode ? "Aktifkan Mode Terang" : "Aktifkan Mode Gelap"}
+          >
+            {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
         </div>
 
         {/* Card Form */}
@@ -141,25 +180,25 @@ export const Login: React.FC = () => {
           
           {/* Logo header for mobile (hidden on desktop) */}
           <div className="flex md:hidden flex-col items-center text-center space-y-3 mb-4">
-            <div className="p-2.5 bg-slate-900 border border-slate-800 rounded-2xl shadow-xl">
+            <div className="p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-md">
               <img src={logoDesa} alt="Logo Desa" className="w-14 h-14 object-contain" />
             </div>
             <div>
-              <h2 className="text-lg font-black text-white uppercase tracking-wider">Desa Telukambulu</h2>
-              <p className="text-xs text-emerald-400 font-bold uppercase tracking-widest mt-0.5">Sistem Informasi Desa Digital</p>
+              <h2 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-wider">Desa Telukambulu</h2>
+              <p className="text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest mt-0.5">Sistem Informasi Desa Digital</p>
             </div>
           </div>
 
-          <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800/80 shadow-[0_0_50px_rgba(0,0,0,0.4)] rounded-3xl p-8 sm:p-10 text-slate-100 relative">
+          <div className="bg-white/80 dark:bg-slate-900/50 backdrop-blur-xl border border-slate-200 dark:border-slate-800/80 shadow-xl dark:shadow-[0_0_50px_rgba(0,0,0,0.4)] rounded-3xl p-8 sm:p-10 text-slate-800 dark:text-slate-100 relative transition-all duration-300">
             {/* Corner highlight */}
             <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-emerald-500/10 to-transparent blur-xl pointer-events-none" />
             
             <div className="space-y-2 mb-8">
-              <h3 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2">
-                <LogIn size={20} className="text-emerald-500" />
+              <h3 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                <LogIn size={20} className="text-emerald-600 dark:text-emerald-500" />
                 Akses Administrator
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Silakan masuk menggunakan kredensial Anda untuk mengelola portal.
               </p>
             </div>
@@ -167,11 +206,11 @@ export const Login: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Username Input */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <label className="block text-xs font-bold text-slate-500 dark:text-slate-450 uppercase tracking-wider">
                   Username
                 </label>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-emerald-500 transition-colors">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500 group-focus-within:text-emerald-600 dark:group-focus-within:text-emerald-500 transition-colors">
                     <User size={18} />
                   </div>
                   <input
@@ -179,7 +218,7 @@ export const Login: React.FC = () => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Masukkan username"
-                    className="w-full text-sm rounded-xl border border-slate-800 bg-slate-950/60 py-3.5 pl-11 pr-4 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all duration-200"
+                    className="w-full text-sm rounded-xl border border-slate-300 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/60 py-3.5 pl-11 pr-4 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all duration-200"
                     required
                   />
                 </div>
@@ -188,12 +227,12 @@ export const Login: React.FC = () => {
               {/* Password Input */}
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <label className="block text-xs font-bold text-slate-500 dark:text-slate-450 uppercase tracking-wider">
                     Password
                   </label>
                 </div>
                 <div className="relative group">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-emerald-500 transition-colors">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500 group-focus-within:text-emerald-600 dark:group-focus-within:text-emerald-500 transition-colors">
                     <Lock size={18} />
                   </div>
                   <input
@@ -201,13 +240,13 @@ export const Login: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Masukkan password"
-                    className="w-full text-sm rounded-xl border border-slate-800 bg-slate-950/60 py-3.5 pl-11 pr-12 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all duration-200"
+                    className="w-full text-sm rounded-xl border border-slate-300 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/60 py-3.5 pl-11 pr-12 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all duration-200"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-500 hover:text-emerald-400 transition-colors"
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -218,7 +257,7 @@ export const Login: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-950/50 hover:shadow-emerald-500/20 active:scale-98 transition-all duration-200 text-sm mt-3"
+                className="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-700/10 dark:shadow-emerald-950/50 hover:shadow-emerald-500/20 active:scale-98 transition-all duration-200 text-sm mt-3"
               >
                 {loading ? (
                   <>
@@ -237,11 +276,10 @@ export const Login: React.FC = () => {
               </button>
             </form>
 
-
           </div>
 
           <div className="text-center pt-2">
-            <p className="text-[10px] text-slate-500">
+            <p className="text-[10px] text-slate-400 dark:text-slate-500">
               Sistem Informasi Desa Digital &copy; 2026 Desa Telukambulu. <br />
               All rights reserved.
             </p>
