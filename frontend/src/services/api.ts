@@ -70,24 +70,8 @@ const apiRequest = async <T>(endpoint: string, method = 'GET', body: any = null)
 export const api = {
   // Authentication
   login: async (username: string, password: string): Promise<{ success: boolean; user?: UserAdmin; message?: string }> => {
-    try {
-      const res = await apiRequest<{ success: boolean; user: UserAdmin; message?: string }>('/auth/login', 'POST', { username, password });
-      return res;
-    } catch {
-      // Fallback auth
-      const users = getLocal<UserAdmin[]>('users');
-      const user = users.find(u => u.username === username && u.password === password);
-      if (user) {
-        if (!user.aktif) {
-          throw new Error('Akun Anda telah dinonaktifkan oleh Super Admin.');
-        }
-        return {
-          success: true,
-          user: { id: user.id, username: user.username, nama: user.nama, role: user.role, aktif: user.aktif }
-        };
-      }
-      throw new Error('Username atau password salah.');
-    }
+    const res = await apiRequest<{ success: boolean; user: UserAdmin; message?: string }>('/auth/login', 'POST', { username, password });
+    return res;
   },
 
   // Profil Desa
@@ -793,84 +777,23 @@ export const api = {
 
   // Users Admin
   getUsers: async (): Promise<UserAdmin[]> => {
-    try {
-      const data = await apiRequest<UserAdmin[]>('/users');
-      return data;
-    } catch {
-      return getLocal<UserAdmin[]>('users').map(u => ({ id: u.id, username: u.username, nama: u.nama, role: u.role, aktif: u.aktif }));
-    }
+    const data = await apiRequest<UserAdmin[]>('/users');
+    return data;
   },
   getUserById: async (id: number): Promise<UserAdmin> => {
-    try {
-      const data = await apiRequest<UserAdmin>(`/users/${id}`);
-      return data;
-    } catch {
-      const user = getLocal<UserAdmin[]>('users').find(u => u.id === id);
-      if (!user) throw new Error('User tidak ditemukan.');
-      return user;
-    }
+    const data = await apiRequest<UserAdmin>(`/users/${id}`);
+    return data;
   },
   createUser: async (userData: Omit<UserAdmin, 'id' | 'aktif'>): Promise<UserAdmin> => {
-    try {
-      const res = await apiRequest<{ success: boolean; data: UserAdmin }>('/users', 'POST', userData);
-      const current = getLocal<UserAdmin[]>('users');
-      current.push(res.data);
-      setLocal('users', current);
-      return res.data;
-    } catch {
-      const current = getLocal<UserAdmin[]>('users');
-      if (current.some(u => u.username.toLowerCase() === userData.username.toLowerCase())) {
-        throw new Error('Username sudah digunakan.');
-      }
-      const newItem: UserAdmin = {
-        id: current.length > 0 ? Math.max(...current.map(i => i.id)) + 1 : 1,
-        aktif: true,
-        ...userData
-      };
-      current.push(newItem);
-      setLocal('users', current);
-      return newItem;
-    }
+    const res = await apiRequest<{ success: boolean; data: UserAdmin }>('/users', 'POST', userData);
+    return res.data;
   },
   updateUser: async (id: number, userData: Partial<UserAdmin>): Promise<UserAdmin> => {
-    try {
-      const res = await apiRequest<{ success: boolean; data: UserAdmin }>(`/users/${id}`, 'PUT', userData);
-      const current = getLocal<UserAdmin[]>('users');
-      const idx = current.findIndex(i => i.id === id);
-      if (idx !== -1) current[idx] = res.data;
-      setLocal('users', current);
-      return res.data;
-    } catch {
-      const current = getLocal<UserAdmin[]>('users');
-      const idx = current.findIndex(i => i.id === id);
-      if (idx === -1) throw new Error('User tidak ditemukan.');
-      
-      // Superadmin protection
-      if (current[idx].username === 'superadmin') {
-        if (userData.username && userData.username !== 'superadmin') throw new Error('Username Super Admin tidak boleh diubah.');
-        if (userData.aktif === false) throw new Error('Akun Super Admin tidak boleh dinonaktifkan.');
-      }
-
-      current[idx] = { ...current[idx], ...userData } as UserAdmin;
-      setLocal('users', current);
-      return current[idx];
-    }
+    const res = await apiRequest<{ success: boolean; data: UserAdmin }>(`/users/${id}`, 'PUT', userData);
+    return res.data;
   },
   deleteUser: async (id: number): Promise<void> => {
-    try {
-      await apiRequest(`/users/${id}`, 'DELETE');
-      const current = getLocal<UserAdmin[]>('users');
-      const filtered = current.filter(i => i.id !== id);
-      setLocal('users', filtered);
-    } catch {
-      const current = getLocal<UserAdmin[]>('users');
-      const user = current.find(u => u.id === id);
-      if (user && user.username === 'superadmin') {
-        throw new Error('Akun Super Admin tidak boleh dihapus.');
-      }
-      const filtered = current.filter(i => i.id !== id);
-      setLocal('users', filtered);
-    }
+    await apiRequest(`/users/${id}`, 'DELETE');
   },
   uploadImage: async (file: File): Promise<string> => {
     const formData = new FormData();
