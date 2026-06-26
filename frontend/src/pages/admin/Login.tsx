@@ -91,52 +91,52 @@ export const Login: React.FC = () => {
       
       {/* LEFT VISUAL PANEL (Desktop Only) */}
       <div className="hidden md:flex md:col-span-5 lg:col-span-5 h-full relative overflow-hidden flex-col justify-between p-10 lg:p-12 select-none">
-        {/* Background Image with Parallax & Multi-layered Gradients */}
+        {/* Background Image */}
         <div 
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-10000 ease-out scale-105"
+          className="absolute inset-0 bg-cover bg-center scale-105"
           style={{ 
             backgroundImage: "url('https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&fit=crop&q=80&w=1200')" 
           }}
         />
-        {/* Overlays */}
-        <div className="absolute inset-0 bg-slate-950/45 mix-blend-multiply z-10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-emerald-950/40 z-10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-slate-950/80 z-10" />
+        {/* Overlays — light mode: hijau-teal lembut; dark mode: hitam pekat */}
+        <div className="absolute inset-0 bg-emerald-800/60 dark:bg-slate-950/45 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/80 via-teal-900/50 to-emerald-700/20 dark:from-slate-950 dark:via-slate-950/60 dark:to-emerald-950/40 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-emerald-900/50 dark:to-slate-950/80 z-10" />
 
         {/* Panel Content (Guaranteed above overlays) */}
         <div className="z-20 flex flex-col justify-between h-full">
           {/* Logo & Regency/Sub-district Branding */}
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-lg">
+            <div className="p-2 bg-white/15 backdrop-blur-md rounded-2xl border border-white/25 shadow-lg">
               <img src={logoDesa} alt="Logo Desa" className="w-12 h-12 object-contain" />
             </div>
             <div>
-              <p className="text-[10px] tracking-widest text-emerald-400 font-bold uppercase">Pemerintah Kab. Karawang</p>
+              <p className="text-[10px] tracking-widest text-emerald-200 dark:text-emerald-400 font-bold uppercase">Pemerintah Kab. Karawang</p>
               <h1 className="text-sm font-extrabold text-white uppercase tracking-wider leading-none">Desa Telukambulu</h1>
-              <p className="text-[9px] text-slate-350 tracking-wider">Kecamatan Batujaya</p>
+              <p className="text-[9px] text-emerald-100/70 dark:text-slate-400 tracking-wider">Kecamatan Batujaya</p>
             </div>
           </div>
 
           {/* Inspirational Title */}
           <div className="space-y-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full text-[10px] font-bold tracking-wider uppercase">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/15 dark:bg-emerald-500/20 text-white dark:text-emerald-300 border border-white/25 dark:border-emerald-500/30 rounded-full text-[10px] font-bold tracking-wider uppercase">
               <Globe size={12} className="animate-spin-slow" />
               Sistem Desa Digital v2.0
             </span>
             <h2 className="text-3xl lg:text-4xl font-black text-white leading-tight">
               Tata Kelola Desa <br />
-              <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300 bg-clip-text text-transparent">
-                Lebih Modern & Praktis
+              <span className="bg-gradient-to-r from-emerald-200 via-teal-100 to-cyan-200 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-300 bg-clip-text text-transparent">
+                Lebih Modern &amp; Praktis
               </span>
             </h2>
-            <p className="text-xs lg:text-sm text-slate-300 font-light leading-relaxed max-w-sm">
+            <p className="text-xs lg:text-sm text-emerald-50/90 dark:text-slate-300 font-light leading-relaxed max-w-sm">
               Kelola berita kependudukan, transparansi sumber daya alam, publikasi produk UMKM, dan respon pengaduan warga secara real-time.
             </p>
           </div>
 
           {/* Infrastructure status */}
-          <div className="pt-6 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400 font-semibold uppercase tracking-wider">
-            <div className="flex items-center gap-1.5 text-emerald-400">
+          <div className="pt-6 border-t border-white/15 flex items-center justify-between text-[11px] text-emerald-100/80 dark:text-slate-400 font-semibold uppercase tracking-wider">
+            <div className="flex items-center gap-1.5 text-emerald-200 dark:text-emerald-400">
               <ShieldCheck size={14} />
               <span>SSL Enkripsi Aman</span>
             </div>
