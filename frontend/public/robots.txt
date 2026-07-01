@@ -1,0 +1,11 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Prevent indexing of admin control panels and raw APIs
+Disallow: /admin/
+Disallow: /api/
+
+# Host domain and Sitemap path
+Host: https://www.telukambulu.com
+Sitemap: https://www.telukambulu.com/sitemap.xml

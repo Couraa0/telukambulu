@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (res.success && res.user) {
         setUser(res.user);
         localStorage.setItem('desa_auth_user', JSON.stringify(res.user));
+        api.clearAllCache(); // Clear cache on successful login
         return { success: true };
       }
       return { success: false, message: res.message || 'Login gagal.' };
@@ -46,6 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('desa_auth_user');
+    api.clearAllCache(); // Clear cache on logout
   };
 
   const hasRole = (allowedRoles: string | string[]): boolean => {

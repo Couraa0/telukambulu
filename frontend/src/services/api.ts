@@ -41,8 +41,68 @@ const setLocal = <T>(key: string, data: T): void => {
   localStorage.setItem(`desa_${key}`, JSON.stringify(data));
 };
 
-// Network request with automatic fallback
+// Caching system configuration
+interface CacheEntry<T> {
+  data: T;
+  timestamp: number;
+}
+
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes TTL in milliseconds
+const memoryCache: Record<string, CacheEntry<any>> = {};
+
+// Helper to retrieve data from cache if valid
+const getCachedData = <T>(key: string): T | null => {
+  const cached = memoryCache[key];
+  if (cached && (Date.now() - cached.timestamp < CACHE_TTL)) {
+    console.log(`[Cache Hit] Serving cached data for key: ${key}`);
+    return cached.data;
+  }
+  return null;
+};
+
+// Helper to store data in cache
+const setCachedData = <T>(key: string, data: T): void => {
+  memoryCache[key] = {
+    data,
+    timestamp: Date.now()
+  };
+};
+
+// Helper to invalidate cache keys (supports exact match or wildcards)
+export const invalidateCache = (key: string | string[]): void => {
+  const keys = Array.isArray(key) ? key : [key];
+  keys.forEach(k => {
+    Object.keys(memoryCache).forEach(cacheKey => {
+      // Invalidate if exact match or if cacheKey starts with the base path plus prefix (e.g. /berita and /berita/5)
+      if (cacheKey === k || cacheKey.startsWith(`${k}/`) || cacheKey.startsWith(`${k}?`)) {
+        console.log(`[Cache Invalidation] Clearing cache key: ${cacheKey}`);
+        delete memoryCache[cacheKey];
+      }
+    });
+  });
+};
+
+// Helper to clear all cache on login/logout
+export const clearAllCache = (): void => {
+  console.log(`[Cache Clear] Clearing all cache entries`);
+  Object.keys(memoryCache).forEach(key => {
+    delete memoryCache[key];
+  });
+};
+
+// Network request with automatic caching & fallback
 const apiRequest = async <T>(endpoint: string, method = 'GET', body: any = null): Promise<T> => {
+  // Use the full endpoint path as the cache key
+  const cacheKey = endpoint;
+
+  // Serve from cache if it's a GET request
+  if (method === 'GET') {
+    const cached = getCachedData<T>(cacheKey);
+    if (cached !== null) {
+      return cached;
+    }
+  }
+
   try {
     const options: RequestInit = {
       method,
@@ -60,6 +120,25 @@ const apiRequest = async <T>(endpoint: string, method = 'GET', body: any = null)
       throw new Error(errorData.message || 'Request failed');
     }
     const data = await response.json();
+
+    // Cache the data if it's a GET request
+    if (method === 'GET') {
+      setCachedData(cacheKey, data);
+    }
+
+    // Invalidate caches if it's a mutating request (POST, PUT, DELETE)
+    if (method !== 'GET') {
+      // e.g. /berita/5 -> base path /berita
+      const basePath = '/' + endpoint.split('/')[1];
+      invalidateCache(basePath);
+
+      // If mutating endpoints that alter dashboard stats, invalidate statistik
+      const statsAlteringPaths = ['/berita', '/pengumuman', '/produk', '/wisata', '/pengaduan', '/demografi'];
+      if (statsAlteringPaths.includes(basePath)) {
+        invalidateCache('/statistik');
+      }
+    }
+
     return data as T;
   } catch (error: any) {
     console.warn(`API: ${method} ${endpoint} failed. Falling back to LocalStorage.`, error.message);
@@ -68,6 +147,11 @@ const apiRequest = async <T>(endpoint: string, method = 'GET', body: any = null)
 };
 
 export const api = {
+  // Clear frontend in-memory cache
+  clearAllCache: (): void => {
+    clearAllCache();
+  },
+
   // Authentication
   login: async (username: string, password: string): Promise<{ success: boolean; user?: UserAdmin; message?: string }> => {
     const res = await apiRequest<{ success: boolean; user: UserAdmin; message?: string }>('/auth/login', 'POST', { username, password });

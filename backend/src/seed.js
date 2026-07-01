@@ -89,7 +89,15 @@ const run = async () => {
 
   try {
     // 1. users
-    await seedTable('users', db.users);
+    const bcrypt = require('bcryptjs');
+    console.log('- Preparing "users" passwords (hashing)...');
+    await seedTable('users', db.users, async (user) => {
+      const hashedPassword = await bcrypt.hash(user.password, 10);
+      return {
+        ...user,
+        password: hashedPassword
+      };
+    });
 
     // 2. profil (single record)
     console.log('- Preparing "profil" images...');

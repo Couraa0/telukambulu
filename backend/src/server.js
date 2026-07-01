@@ -1,13 +1,84 @@
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const bcrypt = require('bcryptjs');
 const { supabase } = require('./utils/supabase');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// Enable proxy trust for accurate rate limiting behind reverse proxies (Vercel, Heroku, etc.)
+app.set('trust proxy', 1);
+
+// Enable Helmet for security headers
+app.use(helmet());
+
+// Configure CORS with production origin restriction
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:5000'
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, postman)
+    if (!origin) return callback(null, true);
+    
+    // In development mode, allow all origins
+    if (process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Blocked by CORS policy'));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
+
+// Global rate limiter (15 minutes, max 200 requests)
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Terlalu banyak permintaan dari IP ini, silakan coba lagi setelah 15 menit.'
+  }
+});
+app.use('/api/', globalLimiter);
+
+// Specific rate limiters for login and complaint submission
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Terlalu banyak percobaan login. Silakan coba lagi setelah 15 menit.'
+  }
+});
+
+const complaintLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Batas pengajuan pengaduan terlampaui. Anda hanya dapat mengirim 5 pengaduan per jam.'
+  }
+});
 
 // Logger middleware
 app.use((req, res, next) => {
@@ -46,7 +117,26 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     }
 
     const file = req.file;
-    const fileExt = file.originalname.split('.').pop();
+    
+    // Validate mime-type (only images)
+    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedMimeTypes.includes(file.mimetype)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Format berkas tidak didukung. Hanya gambar (JPEG, PNG, WEBP, GIF) yang diperbolehkan.'
+      });
+    }
+
+    // Validate extension
+    const fileExt = file.originalname.split('.').pop().toLowerCase();
+    const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+    if (!allowedExtensions.includes(fileExt)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Ekstensi berkas tidak valid. Hanya gambar yang diperbolehkan.'
+      });
+    }
+
     const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
 
     console.log(`Uploading file ${fileName} to Supabase storage bucket 'images'...`);
@@ -74,18 +164,23 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 });
 
 // ==================== AUTH API ====================
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', authLimiter, async (req, res) => {
   const { username, password } = req.body;
   try {
     const { data: user, error } = await supabase
       .from('users')
       .select('*')
       .eq('username', username)
-      .eq('password', password)
       .maybeSingle();
 
     if (error) throw error;
     if (!user) {
+      return res.status(401).json({ success: false, message: 'Username atau password salah.' });
+    }
+
+    // Compare hashed password using bcrypt
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
       return res.status(401).json({ success: false, message: 'Username atau password salah.' });
     }
 
@@ -938,7 +1033,7 @@ app.get('/api/pengaduan/status/:ticket', async (req, res) => {
 });
 
 // Submit Complaint
-app.post('/api/pengaduan', async (req, res) => {
+app.post('/api/pengaduan', complaintLimiter, async (req, res) => {
   try {
     const body = req.body;
     const year = new Date().getFullYear();
@@ -1274,7 +1369,7 @@ app.get('/api/users/:id', async (req, res) => {
 
 app.post('/api/users', async (req, res) => {
   try {
-    const { username } = req.body;
+    const { username, password } = req.body;
 
     const { data: existing } = await supabase
       .from('users')
@@ -1286,9 +1381,12 @@ app.post('/api/users', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Username sudah digunakan.' });
     }
 
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const { data, error } = await supabase
       .from('users')
-      .insert({ ...req.body, aktif: true })
+      .insert({ ...req.body, password: hashedPassword, aktif: true })
       .select()
       .single();
 
@@ -1322,9 +1420,15 @@ app.put('/api/users/:id', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Akun Super Admin tidak boleh dinonaktifkan.' });
     }
 
+    const updateData = { ...body };
+    // Hash password if it is being updated
+    if (body.password) {
+      updateData.password = await bcrypt.hash(body.password, 10);
+    }
+
     const { data, error } = await supabase
       .from('users')
-      .update(body)
+      .update(updateData)
       .eq('id', id)
       .select()
       .single();
