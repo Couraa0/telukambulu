@@ -16,8 +16,14 @@ app.set('trust proxy', 1);
 app.use(helmet());
 
 // Configure CORS with production origin restriction
+const envOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(',').map(o => o.trim())
+  : [];
+
 const allowedOrigins = [
-  process.env.FRONTEND_URL,
+  ...envOrigins,
+  'https://www.telukambulu.com',
+  'https://telukambulu.com',
   'http://localhost:5173',
   'http://localhost:3000',
   'http://localhost:5000'
@@ -36,6 +42,7 @@ app.use(cors({
     if (allowedOrigins.indexOf(origin) !== -1) {
       return callback(null, true);
     } else {
+      console.warn(`[CORS Blocked] Origin "${origin}" is not in the allowed list:`, allowedOrigins);
       return callback(new Error('Blocked by CORS policy'));
     }
   },
