@@ -30,6 +30,7 @@ export const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [logo, setLogo] = useState<string | null>(null);
+  const [bgImage, setBgImage] = useState<string | null>(null);
 
   // Redirect path
   const from = (location.state as any)?.from?.pathname || '/admin/dashboard';
@@ -54,17 +55,20 @@ export const Login: React.FC = () => {
       document.body.classList.remove('dark');
     }
 
-    const loadLogo = async () => {
+    const loadProfil = async () => {
       try {
         const profil = await api.getProfil();
         if (profil?.logo) {
           setLogo(profil.logo);
         }
+        if (profil?.fotoKantor) {
+          setBgImage(profil.fotoKantor);
+        }
       } catch (err) {
-        console.error('Failed to load logo in login:', err);
+        console.error('Failed to load profil in login:', err);
       }
     };
-    loadLogo();
+    loadProfil();
   }, []);
 
   const toggleTheme = () => {
@@ -106,12 +110,14 @@ export const Login: React.FC = () => {
       {/* LEFT VISUAL PANEL (Desktop Only) */}
       <div className="hidden md:flex md:col-span-5 lg:col-span-5 h-full relative overflow-hidden flex-col justify-between p-10 lg:p-12 select-none">
         {/* Background Image */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center scale-105"
-          style={{ 
-            backgroundImage: "url('https://images.unsplash.com/photo-1530595467537-0b5996c41f2d?auto=format&fit=crop&q=80&w=1200')" 
-          }}
-        />
+        {bgImage && (
+          <div 
+            className="absolute inset-0 bg-cover bg-center scale-105"
+            style={{ 
+              backgroundImage: `url('${bgImage}')` 
+            }}
+          />
+        )}
         {/* Overlays — light mode: hijau-teal lembut; dark mode: hitam pekat */}
         <div className="absolute inset-0 bg-emerald-800/60 dark:bg-slate-950/45 z-10" />
         <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/80 via-teal-900/50 to-emerald-700/20 dark:from-slate-950 dark:via-slate-950/60 dark:to-emerald-950/40 z-10" />
