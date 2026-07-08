@@ -72,10 +72,10 @@ export const Beranda: React.FC = () => {
       {/* 1. Hero Section */}
       <section className="relative bg-gradient-to-br from-emerald-50 via-slate-50 to-emerald-100/30 dark:from-primary-950 dark:via-slate-900 dark:to-[#052511] text-slate-800 dark:text-white overflow-hidden pt-8 pb-20 sm:pt-12 sm:pb-28 border-b border-slate-100 dark:border-slate-900">
         {/* Background Image Overlay */}
-        {profil?.gambarSplash && (
+        {profil?.fotoKantor && (
           <div className="absolute inset-0 opacity-35 dark:opacity-15 transition-opacity duration-1000">
             <img
-              src={profil.gambarSplash}
+              src={profil.fotoKantor}
               alt="Desa Telukambulu"
               className="w-full h-full object-cover transform scale-105"
             />

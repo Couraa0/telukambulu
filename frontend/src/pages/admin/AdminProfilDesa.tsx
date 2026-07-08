@@ -384,13 +384,7 @@ export const AdminProfilDesa: React.FC = () => {
           {/* Geographic & Visual Links */}
           <div className="border-t border-slate-100 dark:border-slate-800 pt-5">
             <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-4">Aset Visual, Geografis & Foto Kantor</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              <ImageUpload
-                label="Gambar Splash Beranda"
-                value={profilForm.gambarSplash || ''}
-                onChange={(url) => setProfilForm(prev => prev ? ({ ...prev, gambarSplash: url }) : null)}
-              />
-
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               <ImageUpload
                 label="Logo Desa"
                 value={profilForm.logo || ''}

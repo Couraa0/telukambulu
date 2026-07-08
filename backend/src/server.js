@@ -243,14 +243,12 @@ app.get('/api/profil', async (req, res) => {
     let petaLink = data.peta_wilayah || '';
     let petaPlaceholder = '';
     let logo = '';
-    let gambarSplash = '';
     if (petaLink.trim().startsWith('{')) {
       try {
         const parsed = JSON.parse(petaLink);
         petaLink = parsed.petaLink || '';
         petaPlaceholder = parsed.petaPlaceholder || '';
         logo = parsed.logo || '';
-        gambarSplash = parsed.gambarSplash || '';
       } catch (e) {
         console.error('Failed to parse peta_wilayah JSON:', e);
       }
@@ -269,7 +267,6 @@ app.get('/api/profil', async (req, res) => {
       petaLink,
       petaPlaceholder,
       logo,
-      gambarSplash,
       fotoKantor: data.foto_kantor
     });
   } catch (err) {
@@ -282,12 +279,11 @@ app.put('/api/profil', async (req, res) => {
   try {
     const p = req.body;
     let peta_wilayah = p.petaLink || '';
-    if (p.petaPlaceholder || p.logo || p.gambarSplash || p.petaLink) {
+    if (p.petaPlaceholder || p.logo || p.petaLink) {
       peta_wilayah = JSON.stringify({
         petaLink: p.petaLink || '',
         petaPlaceholder: p.petaPlaceholder || '',
-        logo: p.logo || '',
-        gambarSplash: p.gambarSplash || ''
+        logo: p.logo || ''
       });
     }
 
@@ -315,14 +311,12 @@ app.put('/api/profil', async (req, res) => {
     let responsePetaLink = data.peta_wilayah || '';
     let responsePetaPlaceholder = '';
     let responseLogo = '';
-    let responseGambarSplash = '';
     if (responsePetaLink.trim().startsWith('{')) {
       try {
         const parsed = JSON.parse(responsePetaLink);
         responsePetaLink = parsed.petaLink || '';
         responsePetaPlaceholder = parsed.petaPlaceholder || '';
         responseLogo = parsed.logo || '';
-        responseGambarSplash = parsed.gambarSplash || '';
       } catch (e) {
         console.error('Failed to parse response peta_wilayah JSON:', e);
       }
@@ -344,7 +338,6 @@ app.put('/api/profil', async (req, res) => {
         petaLink: responsePetaLink,
         petaPlaceholder: responsePetaPlaceholder,
         logo: responseLogo,
-        gambarSplash: responseGambarSplash,
         fotoKantor: data.foto_kantor
       }
     });

@@ -14,7 +14,6 @@ export interface Profil {
   petaLink: string;
   fotoKantor: string;
   logo?: string;
-  gambarSplash?: string;
 }
 
 export interface Statistik {
