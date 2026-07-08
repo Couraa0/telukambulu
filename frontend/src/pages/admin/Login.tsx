@@ -16,6 +16,7 @@ import {
   Moon
 } from 'lucide-react';
 import logoDesa from '../../assets/logo-desa.png';
+import { api } from '../../services/api';
 
 export const Login: React.FC = () => {
   const { login, user } = useAuth();
@@ -28,6 +29,7 @@ export const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [logo, setLogo] = useState<string | null>(null);
 
   // Redirect path
   const from = (location.state as any)?.from?.pathname || '/admin/dashboard';
@@ -39,7 +41,7 @@ export const Login: React.FC = () => {
     }
   }, [user, navigate]);
 
-  // Load and apply theme from localStorage or preferred scheme
+  // Load and apply theme from localStorage or preferred scheme & load logo
   useEffect(() => {
     const isDark = localStorage.getItem('theme') === 'dark' ||
       (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -51,6 +53,18 @@ export const Login: React.FC = () => {
       document.documentElement.classList.remove('dark');
       document.body.classList.remove('dark');
     }
+
+    const loadLogo = async () => {
+      try {
+        const profil = await api.getProfil();
+        if (profil?.logo) {
+          setLogo(profil.logo);
+        }
+      } catch (err) {
+        console.error('Failed to load logo in login:', err);
+      }
+    };
+    loadLogo();
   }, []);
 
   const toggleTheme = () => {
@@ -108,7 +122,7 @@ export const Login: React.FC = () => {
           {/* Logo & Regency/Sub-district Branding */}
           <div className="flex items-center gap-3">
             <div className="p-2 bg-white/15 backdrop-blur-md rounded-2xl border border-white/25 shadow-lg">
-              <img src={logoDesa} alt="Logo Desa" className="w-12 h-12 object-contain" />
+              <img src={logo || logoDesa} alt="Logo Desa" className="w-12 h-12 object-contain" />
             </div>
             <div>
               <p className="text-[10px] tracking-widest text-emerald-200 dark:text-emerald-400 font-bold uppercase">Pemerintah Kab. Karawang</p>
@@ -181,7 +195,7 @@ export const Login: React.FC = () => {
           {/* Logo header for mobile (hidden on desktop) */}
           <div className="flex md:hidden flex-col items-center text-center space-y-3 mb-4">
             <div className="p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-md">
-              <img src={logoDesa} alt="Logo Desa" className="w-14 h-14 object-contain" />
+              <img src={logo || logoDesa} alt="Logo Desa" className="w-14 h-14 object-contain" />
             </div>
             <div>
               <h2 className="text-lg font-black text-slate-900 dark:text-white uppercase tracking-wider">Desa Telukambulu</h2>

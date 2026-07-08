@@ -13,6 +13,8 @@ export interface Profil {
   petaPlaceholder: string;
   petaLink: string;
   fotoKantor: string;
+  logo?: string;
+  gambarSplash?: string;
 }
 
 export interface Statistik {

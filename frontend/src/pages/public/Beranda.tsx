@@ -72,13 +72,15 @@ export const Beranda: React.FC = () => {
       {/* 1. Hero Section */}
       <section className="relative bg-gradient-to-br from-emerald-50 via-slate-50 to-emerald-100/30 dark:from-primary-950 dark:via-slate-900 dark:to-[#052511] text-slate-800 dark:text-white overflow-hidden pt-8 pb-20 sm:pt-12 sm:pb-28 border-b border-slate-100 dark:border-slate-900">
         {/* Background Image Overlay */}
-        <div className="absolute inset-0 opacity-35 dark:opacity-15">
-          <img
-            src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=1200"
-            alt="Desa Telukambulu"
-            className="w-full h-full object-cover transform scale-105"
-          />
-        </div>
+        {profil?.gambarSplash && (
+          <div className="absolute inset-0 opacity-35 dark:opacity-15 transition-opacity duration-1000">
+            <img
+              src={profil.gambarSplash}
+              alt="Desa Telukambulu"
+              className="w-full h-full object-cover transform scale-105"
+            />
+          </div>
+        )}
 
         {/* Gradient Scrim for Readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-slate-50 via-slate-50/85 to-transparent dark:from-slate-900 dark:via-slate-900/80 dark:to-transparent pointer-events-none z-[1]"></div>
@@ -142,7 +144,7 @@ export const Beranda: React.FC = () => {
                 {/* Circular glass card */}
                 <div className="relative w-64 h-64 sm:w-72 sm:h-72 bg-white/70 dark:bg-slate-900/50 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 rounded-full p-8 flex items-center justify-center shadow-2xl transition-all duration-500 hover:scale-[1.02]">
                   <img
-                    src={logoDesa}
+                    src={profil?.logo || logoDesa}
                     alt="Lambang Desa Telukambulu"
                     className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(16,185,129,0.2)]"
                   />
@@ -197,11 +199,7 @@ export const Beranda: React.FC = () => {
 
               <div className="relative bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 p-4 rounded-[2.2rem] shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
                 <img
-                  src={
-                    profil?.kepalaDesa?.foto && !profil.kepalaDesa.foto.includes('unsplash.com')
-                      ? profil.kepalaDesa.foto
-                      : "/assets/images/kepala-desa.png"
-                  }
+                  src={profil?.kepalaDesa?.foto || "/assets/images/kepala-desa.png"}
                   alt={profil?.kepalaDesa?.nama || "Kepala Desa"}
                   className="w-64 h-80 object-cover rounded-[1.6rem] shadow-inner bg-slate-100 ring-4 ring-primary-500/10 hover:ring-primary-500/25 transition-all duration-300"
                 />
@@ -219,7 +217,7 @@ export const Beranda: React.FC = () => {
             {/* Background Big Quote Icon */}
             <div className="absolute -top-12 -left-6 text-[12rem] font-serif text-primary-500/10 select-none pointer-events-none font-bold">“</div>
             <div className="relative z-10">
-              <SectionTitle title="Sambutan Kepala Desa" subtitle="H. Ahmad Saprudin, S.IP" />
+              <SectionTitle title="Sambutan Kepala Desa" subtitle={profil?.kepalaDesa?.nama || "H. Ahmad Saprudin, S.IP"} />
               <p className="text-sm sm:text-base text-slate-700 dark:text-slate-350 leading-relaxed italic border-l-4 border-primary-500 pl-4 mb-6 font-medium">
                 "{profil?.sambutan || "Kami berkomitmen menghadirkan transparansi pelayanan publik berbasis digital bagi seluruh warga."}"
               </p>

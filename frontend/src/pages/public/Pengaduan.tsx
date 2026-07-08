@@ -12,6 +12,7 @@ import { useSEO } from '../../hooks/useSEO';
 import useToast from '../../hooks/useToast';
 import { MessageSquareWarning, ShieldCheck, Copy, Check, Ticket } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import ImageUpload from '../../components/common/ImageUpload';
 
 export const Pengaduan: React.FC = () => {
   useSEO({
@@ -200,12 +201,10 @@ export const Pengaduan: React.FC = () => {
                   error={errors.kategori}
                   required
                 />
-                <FormInput
-                  label="URL Foto Bukti Kejadian (Dummy Image) - Opsional"
-                  name="foto"
+                <ImageUpload
+                  label="Foto Bukti Kejadian - Opsional"
                   value={formData.foto}
-                  onChange={handleInputChange}
-                  placeholder="Contoh: https://images.unsplash.com/..."
+                  onChange={(url) => setFormData(prev => ({ ...prev, foto: url }))}
                 />
               </div>
 

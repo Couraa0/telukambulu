@@ -42,7 +42,8 @@ const uploadImageToSupabase = async (url) => {
     }
 
     // Construct public Supabase Storage URL
-    const publicUrl = `https://pzfkmwmrkmculfxnhjuj.supabase.co/storage/v1/object/public/images/${filename}`;
+    const { data: publicData } = supabase.storage.from('images').getPublicUrl(filename);
+    const publicUrl = publicData.publicUrl;
     return publicUrl;
   } catch (err) {
     console.warn(`  ⚠️ Skip image upload for ${url} (using fallback):`, err.message);
@@ -104,6 +105,16 @@ const run = async () => {
     const p = db.profil;
     const foto_kades = await uploadImageToSupabase(p.kepalaDesa?.foto);
     const foto_kantor = await uploadImageToSupabase(p.fotoKantor);
+    const petaPlaceholder = await uploadImageToSupabase(p.petaPlaceholder);
+    const logo = p.logo ? await uploadImageToSupabase(p.logo) : '';
+    
+    // Combine petaLink, petaPlaceholder, and logo as a JSON string inside peta_wilayah
+    const peta_wilayah = JSON.stringify({
+      petaLink: p.petaLink || '',
+      petaPlaceholder: petaPlaceholder || '',
+      logo: logo || ''
+    });
+
     const mappedProfil = {
       id: 1,
       sejarah: p.sejarah,
@@ -113,7 +124,7 @@ const run = async () => {
       nama_kades: p.kepalaDesa?.nama || '',
       foto_kades,
       periode_kades: p.kepalaDesa?.periode || '2020 - 2026',
-      peta_wilayah: p.petaLink || '',
+      peta_wilayah,
       foto_kantor
     };
     await seedTable('profil', [mappedProfil]);

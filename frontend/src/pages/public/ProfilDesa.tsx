@@ -47,11 +47,11 @@ export const ProfilDesa: React.FC = () => {
   return (
     <div className="py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 font-sans">
       <Breadcrumb items={[{ label: 'Profil Desa' }]} />
-      
+
       {/* 1. Header & Sejarah */}
       <section className="mb-16">
         <SectionTitle title="Profil Desa Telukambulu" subtitle="Kecamatan Batujaya, Kabupaten Karawang, Jawa Barat" />
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-8">
             <Card>
@@ -84,7 +84,7 @@ export const ProfilDesa: React.FC = () => {
               <div className="p-5">
                 <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-2">Kantor Kepala Desa</h4>
                 <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                  Pusat administrasi, rapat pembangunan (Musrenbangdes), dan koordinasi pelayanan masyarakat Desa Telukambulu.
+                  Pusat administrasi, rapat pembangunan (Musrenbangdes), pusat posyandu dan koordinasi pelayanan masyarakat Desa Telukambulu.
                 </p>
               </div>
             </Card>
@@ -98,7 +98,7 @@ export const ProfilDesa: React.FC = () => {
           <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-sans">Visi & Misi Desa</h3>
           <div className="h-1.5 w-12 bg-primary-600 rounded-full mx-auto mt-3"></div>
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Visi */}
           <div>
@@ -155,11 +155,7 @@ export const ProfilDesa: React.FC = () => {
             perangkat.map((item) => (
               <Card key={item.id} hoverEffect noPadding className="flex flex-col overflow-hidden text-center">
                 <img
-                  src={
-                    item.foto && !item.foto.includes('unsplash.com/photo-1560250097-0b93528c311a')
-                      ? item.foto
-                      : "/assets/images/kepala-desa.png"
-                  }
+                  src={item.foto || "/assets/images/kepala-desa.png"}
                   alt={item.nama}
                   className="w-full h-44 object-cover bg-slate-100"
                 />
@@ -184,7 +180,7 @@ export const ProfilDesa: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Dusun Table */}
           <div className="lg:col-span-8 flex flex-col gap-6">
             <Card>
@@ -231,7 +227,7 @@ export const ProfilDesa: React.FC = () => {
 
             {/* Demographics details grids */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              
+
               {/* Pekerjaan */}
               <Card>
                 <h4 className="text-sm font-bold text-slate-850 dark:text-white mb-4 flex items-center gap-2 font-sans">
@@ -293,7 +289,7 @@ export const ProfilDesa: React.FC = () => {
 
           {/* Map & Gender ratio */}
           <div className="lg:col-span-4 flex flex-col gap-6">
-            
+
             {/* Gender Ratio */}
             <Card className="text-center">
               <h4 className="text-sm font-bold text-slate-850 dark:text-white mb-4 flex items-center justify-center gap-2 font-sans">
@@ -324,9 +320,8 @@ export const ProfilDesa: React.FC = () => {
                     <div
                       className="bg-secondary-500 h-full"
                       style={{
-                        width: `${
-                          demografi ? (demografi.gender.lakiLaki / (demografi.gender.lakiLaki + demografi.gender.perempuan)) * 100 : 50
-                        }%`,
+                        width: `${demografi ? (demografi.gender.lakiLaki / (demografi.gender.lakiLaki + demografi.gender.perempuan)) * 100 : 50
+                          }%`,
                       }}
                     ></div>
                   </div>
@@ -362,6 +357,8 @@ export const ProfilDesa: React.FC = () => {
                 ></iframe>
               )}
             </Card>
+
+
 
           </div>
 

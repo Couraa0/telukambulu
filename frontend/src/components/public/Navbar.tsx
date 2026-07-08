@@ -3,16 +3,18 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, Sun, Moon, LogIn, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import logoDesa from '../../assets/logo-desa.png';
+import { api } from '../../services/api';
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [logo, setLogo] = useState<string | null>(null);
 
   const location = useLocation();
   const { user } = useAuth();
 
-  // Initialize Dark Mode from localStorage or browser preferences
+  // Initialize Dark Mode & load logo
   useEffect(() => {
     const isDark = localStorage.getItem('theme') === 'dark' ||
       (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -24,6 +26,18 @@ export const Navbar: React.FC = () => {
       document.documentElement.classList.remove('dark');
       document.body.classList.remove('dark');
     }
+
+    const loadLogo = async () => {
+      try {
+        const profil = await api.getProfil();
+        if (profil?.logo) {
+          setLogo(profil.logo);
+        }
+      } catch (err) {
+        console.error('Failed to load logo in navbar:', err);
+      }
+    };
+    loadLogo();
   }, []);
 
   const toggleDarkMode = () => {
@@ -81,7 +95,7 @@ export const Navbar: React.FC = () => {
           {/* Logo & Branding */}
           <Link to="/" className="flex items-center gap-3 group">
             <img
-              src={logoDesa}
+              src={logo || logoDesa}
               alt="Logo Desa Telukambulu"
               className="w-10 h-10 sm:w-12 sm:h-12 object-contain group-hover:scale-105 transition-all duration-300"
             />

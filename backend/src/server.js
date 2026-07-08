@@ -6,6 +6,19 @@ const rateLimit = require('express-rate-limit');
 const bcrypt = require('bcryptjs');
 const { supabase } = require('./utils/supabase');
 
+const getNextId = async (tableName) => {
+  const { data, error } = await supabase
+    .from(tableName)
+    .select('id')
+    .order('id', { ascending: false })
+    .limit(1);
+  if (error || !data || data.length === 0) {
+    return 1;
+  }
+  return data[0].id + 1;
+};
+
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -25,8 +38,13 @@ const allowedOrigins = [
   'https://www.telukambulu.com',
   'https://telukambulu.com',
   'http://localhost:5173',
+  'http://localhost:5174',
   'http://localhost:3000',
-  'http://localhost:5000'
+  'http://localhost:5000',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:5174',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:5000'
 ].filter(Boolean);
 
 app.use(cors({
@@ -157,7 +175,8 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 
     if (error) throw error;
 
-    const publicUrl = `https://pzfkmwmrkmculfxnhjuj.supabase.co/storage/v1/object/public/images/${fileName}`;
+    const { data: publicData } = supabase.storage.from('images').getPublicUrl(fileName);
+    const publicUrl = publicData.publicUrl;
 
     res.json({
       success: true,
@@ -221,6 +240,22 @@ app.get('/api/profil', async (req, res) => {
 
     if (error) throw error;
 
+    let petaLink = data.peta_wilayah || '';
+    let petaPlaceholder = '';
+    let logo = '';
+    let gambarSplash = '';
+    if (petaLink.trim().startsWith('{')) {
+      try {
+        const parsed = JSON.parse(petaLink);
+        petaLink = parsed.petaLink || '';
+        petaPlaceholder = parsed.petaPlaceholder || '';
+        logo = parsed.logo || '';
+        gambarSplash = parsed.gambarSplash || '';
+      } catch (e) {
+        console.error('Failed to parse peta_wilayah JSON:', e);
+      }
+    }
+
     res.json({
       sejarah: data.sejarah,
       visi: data.visi,
@@ -231,7 +266,10 @@ app.get('/api/profil', async (req, res) => {
         foto: data.foto_kades,
         periode: data.periode_kades
       },
-      petaLink: data.peta_wilayah,
+      petaLink,
+      petaPlaceholder,
+      logo,
+      gambarSplash,
       fotoKantor: data.foto_kantor
     });
   } catch (err) {
@@ -243,6 +281,16 @@ app.get('/api/profil', async (req, res) => {
 app.put('/api/profil', async (req, res) => {
   try {
     const p = req.body;
+    let peta_wilayah = p.petaLink || '';
+    if (p.petaPlaceholder || p.logo || p.gambarSplash || p.petaLink) {
+      peta_wilayah = JSON.stringify({
+        petaLink: p.petaLink || '',
+        petaPlaceholder: p.petaPlaceholder || '',
+        logo: p.logo || '',
+        gambarSplash: p.gambarSplash || ''
+      });
+    }
+
     const updateData = {
       sejarah: p.sejarah,
       visi: p.visi,
@@ -251,7 +299,7 @@ app.put('/api/profil', async (req, res) => {
       nama_kades: p.kepalaDesa?.nama,
       foto_kades: p.kepalaDesa?.foto,
       periode_kades: p.kepalaDesa?.periode,
-      peta_wilayah: p.petaLink,
+      peta_wilayah,
       foto_kantor: p.fotoKantor
     };
 
@@ -263,6 +311,22 @@ app.put('/api/profil', async (req, res) => {
       .single();
 
     if (error) throw error;
+
+    let responsePetaLink = data.peta_wilayah || '';
+    let responsePetaPlaceholder = '';
+    let responseLogo = '';
+    let responseGambarSplash = '';
+    if (responsePetaLink.trim().startsWith('{')) {
+      try {
+        const parsed = JSON.parse(responsePetaLink);
+        responsePetaLink = parsed.petaLink || '';
+        responsePetaPlaceholder = parsed.petaPlaceholder || '';
+        responseLogo = parsed.logo || '';
+        responseGambarSplash = parsed.gambarSplash || '';
+      } catch (e) {
+        console.error('Failed to parse response peta_wilayah JSON:', e);
+      }
+    }
 
     res.json({
       success: true,
@@ -277,7 +341,10 @@ app.put('/api/profil', async (req, res) => {
           foto: data.foto_kades,
           periode: data.periode_kades
         },
-        petaLink: data.peta_wilayah,
+        petaLink: responsePetaLink,
+        petaPlaceholder: responsePetaPlaceholder,
+        logo: responseLogo,
+        gambarSplash: responseGambarSplash,
         fotoKantor: data.foto_kantor
       }
     });
@@ -336,9 +403,10 @@ app.get('/api/perangkat', async (req, res) => {
 // Manage Perangkat Desa
 app.post('/api/perangkat', async (req, res) => {
   try {
+    const id = await getNextId('perangkat');
     const { data, error } = await supabase
       .from('perangkat')
-      .insert(req.body)
+      .insert({ ...req.body, id })
       .select()
       .single();
 
@@ -491,9 +559,10 @@ app.get('/api/pengumuman/:id', async (req, res) => {
 
 app.post('/api/pengumuman', async (req, res) => {
   try {
+    const id = await getNextId('pengumuman');
     const { data, error } = await supabase
       .from('pengumuman')
-      .insert({ ...req.body, views: 0 })
+      .insert({ ...req.body, id, views: 0 })
       .select()
       .single();
 
@@ -606,8 +675,10 @@ app.get('/api/berita/:id', async (req, res) => {
 
 app.post('/api/berita', async (req, res) => {
   try {
+    const id = await getNextId('berita');
     const body = req.body;
     const insertData = {
+      id,
       judul: body.judul,
       ringkasan: body.ringkasan,
       isi: body.isi,
@@ -720,9 +791,10 @@ app.get('/api/sda/:id', async (req, res) => {
 
 app.post('/api/sda', async (req, res) => {
   try {
+    const id = await getNextId('sda');
     const { data, error } = await supabase
       .from('sda')
-      .insert(req.body)
+      .insert({ ...req.body, id })
       .select()
       .single();
 
@@ -800,9 +872,10 @@ app.get('/api/produk/:id', async (req, res) => {
 
 app.post('/api/produk', async (req, res) => {
   try {
+    const id = await getNextId('produk');
     const { data, error } = await supabase
       .from('produk')
-      .insert(req.body)
+      .insert({ ...req.body, id })
       .select()
       .single();
 
@@ -907,8 +980,10 @@ app.get('/api/wisata/:id', async (req, res) => {
 
 app.post('/api/wisata', async (req, res) => {
   try {
+    const id = await getNextId('wisata');
     const body = req.body;
     const insertData = {
+      id,
       nama: body.nama,
       deskripsi: body.deskripsi,
       lokasi: body.lokasi,
@@ -1068,7 +1143,9 @@ app.post('/api/pengaduan', complaintLimiter, async (req, res) => {
     const paddedNum = String(nextNum).padStart(4, '0');
     const ticketCode = `ADU-${year}-${paddedNum}`;
 
+    const id = await getNextId('pengaduan');
     const insertData = {
+      id,
       tiket: ticketCode,
       nama: body.nama,
       nik: body.nik,
@@ -1210,9 +1287,10 @@ app.get('/api/galeri', async (req, res) => {
 
 app.post('/api/galeri', async (req, res) => {
   try {
+    const id = await getNextId('galeri');
     const { data, error } = await supabase
       .from('galeri')
-      .insert(req.body)
+      .insert({ ...req.body, id })
       .select()
       .single();
 
@@ -1391,9 +1469,11 @@ app.post('/api/users', async (req, res) => {
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const nextId = await getNextId('users');
+
     const { data, error } = await supabase
       .from('users')
-      .insert({ ...req.body, password: hashedPassword, aktif: true })
+      .insert({ ...req.body, id: nextId, password: hashedPassword, aktif: true })
       .select()
       .single();
 
@@ -1482,7 +1562,7 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
     console.log(`=================================================`);
     console.log(`🚀 Server Desa Digital Telukambulu aktif!`);
     console.log(`Port: http://localhost:${PORT}`);
-    console.log(`Menggunakan database Supabase: https://pzfkmwmrkmculfxnhjuj.supabase.co`);
+    console.log(`Menggunakan database Supabase: ${process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'}`);
     console.log(`=================================================`);
   });
 }

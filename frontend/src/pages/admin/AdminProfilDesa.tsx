@@ -190,8 +190,23 @@ export const AdminProfilDesa: React.FC = () => {
     const newList = [...demoForm.dusunList];
     newList[idx] = {
       ...newList[idx],
-      [field]: typeof val === 'number' ? val : parseInt(val) || 0
+      [field]: field === 'nama' ? val : (parseInt(val as string) || 0)
     };
+    setDemoForm({ ...demoForm, dusunList: newList });
+  };
+
+  const handleAddDusun = () => {
+    if (!demoForm) return;
+    const newDusun = { nama: 'Dusun Baru', rt: 0, rw: 0, kk: 0, jiwa: 0 };
+    setDemoForm({
+      ...demoForm,
+      dusunList: [...demoForm.dusunList, newDusun]
+    });
+  };
+
+  const handleRemoveDusun = (idx: number) => {
+    if (!demoForm) return;
+    const newList = demoForm.dusunList.filter((_, i) => i !== idx);
     setDemoForm({ ...demoForm, dusunList: newList });
   };
 
@@ -366,10 +381,22 @@ export const AdminProfilDesa: React.FC = () => {
             </div>
           </div>
 
-          {/* Geographic Links */}
+          {/* Geographic & Visual Links */}
           <div className="border-t border-slate-100 dark:border-slate-800 pt-5">
-            <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-4">Aset Geografis & Foto Kantor</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-4">Aset Visual, Geografis & Foto Kantor</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <ImageUpload
+                label="Gambar Splash Beranda"
+                value={profilForm.gambarSplash || ''}
+                onChange={(url) => setProfilForm(prev => prev ? ({ ...prev, gambarSplash: url }) : null)}
+              />
+
+              <ImageUpload
+                label="Logo Desa"
+                value={profilForm.logo || ''}
+                onChange={(url) => setProfilForm(prev => prev ? ({ ...prev, logo: url }) : null)}
+              />
+
               <ImageUpload
                 label="Foto Kantor Desa"
                 value={profilForm.fotoKantor}
@@ -382,12 +409,7 @@ export const AdminProfilDesa: React.FC = () => {
                 value={profilForm.petaLink}
                 onChange={handleProfilChange}
               />
-              <FormInput
-                label="URL Gambar Peta Wilayah"
-                name="petaPlaceholder"
-                value={profilForm.petaPlaceholder}
-                onChange={handleProfilChange}
-              />
+
             </div>
           </div>
 
@@ -471,17 +493,30 @@ export const AdminProfilDesa: React.FC = () => {
 
           {/* Dusun list database */}
           <div className="border-t border-slate-100 dark:border-slate-800 pt-5">
-            <h4 className="text-sm font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-1.5">
-              <Layers size={18} className="text-secondary-500" />
-              Rincian Administratif Dusun
-            </h4>
+            <div className="flex items-center justify-between mb-4">
+              <h4 className="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+                <Layers size={18} className="text-secondary-500" />
+                Rincian Administratif Dusun
+              </h4>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleAddDusun}
+                icon={Plus}
+              >
+                Tambah Dusun
+              </Button>
+            </div>
             <div className="flex flex-col gap-4">
               {demoForm.dusunList.map((dusun, idx) => (
                 <div key={idx} className="p-4 bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-800/80 rounded-2xl flex flex-col sm:flex-row gap-4 items-end">
-                  <div className="flex-1 w-full">
-                    <span className="block text-xs font-bold text-slate-400 uppercase mb-1">Dusun</span>
-                    <span className="block text-sm font-bold text-slate-800 dark:text-white">{dusun.nama}</span>
-                  </div>
+                  <FormInput
+                    label="Nama Dusun"
+                    type="text"
+                    value={dusun.nama}
+                    onChange={(e) => handleDusunDemoChange(idx, 'nama', e.target.value)}
+                    className="flex-1 w-full"
+                  />
                   <FormInput
                     label="RT"
                     type="number"
@@ -509,6 +544,14 @@ export const AdminProfilDesa: React.FC = () => {
                     value={dusun.jiwa}
                     onChange={(e) => handleDusunDemoChange(idx, 'jiwa', e.target.value)}
                     className="w-full sm:w-28"
+                  />
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => handleRemoveDusun(idx)}
+                    icon={Trash2}
+                    title="Hapus Dusun"
+                    className="w-full sm:w-auto h-10 flex items-center justify-center"
                   />
                 </div>
               ))}

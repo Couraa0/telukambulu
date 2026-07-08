@@ -15,7 +15,7 @@ import {
   UserAdmin
 } from '../data/initialData';
 
-let API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+let API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api';
 API_BASE = API_BASE.replace(/\/+$/, '');
 if (!API_BASE.endsWith('/api')) {
   API_BASE = API_BASE + '/api';
