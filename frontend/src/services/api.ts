@@ -92,6 +92,21 @@ export const clearAllCache = (): void => {
 
 // Network request with automatic caching & fallback
 const apiRequest = async <T>(endpoint: string, method = 'GET', body: any = null): Promise<T> => {
+  // Block mutating requests for Viewer role
+  if (method !== 'GET' && endpoint !== '/auth/login') {
+    try {
+      const savedUser = localStorage.getItem('desa_auth_user');
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        if (parsed.role === 'Viewer') {
+          throw new Error('Akses ditolak: Akun dengan role Viewer tidak diizinkan untuk menambah, mengubah, atau menghapus data.');
+        }
+      }
+    } catch (e) {
+      console.error('Failed to verify user role in API interceptor:', e);
+    }
+  }
+
   // Use the full endpoint path as the cache key
   const cacheKey = endpoint;
 

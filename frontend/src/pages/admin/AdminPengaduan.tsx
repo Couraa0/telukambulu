@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { api } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import { Pengaduan } from '../../data/initialData';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
@@ -18,6 +19,7 @@ import { Eye, RefreshCw, Download, Printer, MapPin, Calendar } from 'lucide-reac
 
 export const AdminPengaduan: React.FC = () => {
   const { showToast } = useToast();
+  const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   
   const [pengaduan, setPengaduan] = useState<Pengaduan[]>([]);
@@ -340,42 +342,59 @@ export const AdminPengaduan: React.FC = () => {
                   Tindakan & Status
                 </h3>
                 
-                <form onSubmit={handleUpdateStatus} className="flex flex-col gap-4">
-                  <SelectInput
-                    label="Ubah Status Pengaduan"
-                    name="status"
-                    options={[
-                      { value: 'Menunggu', label: 'Menunggu' },
-                      { value: 'Diproses', label: 'Diproses' },
-                      { value: 'Selesai', label: 'Selesai' },
-                      { value: 'Ditolak', label: 'Ditolak' }
-                    ]}
-                    value={statusForm.status}
-                    onChange={handleStatusFormChange}
-                    required
-                  />
+                {user?.role === 'Viewer' ? (
+                  <div className="flex flex-col gap-4 text-xs font-semibold">
+                    <div>
+                      <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Status Penanganan</span>
+                      <Badge type={getStatusType(selectedItem.status)} variant="solid">
+                        {selectedItem.status}
+                      </Badge>
+                    </div>
+                    <div>
+                      <span className="block text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Tanggapan / Catatan Admin</span>
+                      <p className="text-xs text-slate-700 dark:text-slate-355 bg-white dark:bg-slate-950 p-3 rounded-xl border border-slate-100 dark:border-slate-800 font-medium">
+                        {selectedItem.catatanAdmin || '(Belum ada catatan resmi)'}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleUpdateStatus} className="flex flex-col gap-4">
+                    <SelectInput
+                      label="Ubah Status Pengaduan"
+                      name="status"
+                      options={[
+                        { value: 'Menunggu', label: 'Menunggu' },
+                        { value: 'Diproses', label: 'Diproses' },
+                        { value: 'Selesai', label: 'Selesai' },
+                        { value: 'Ditolak', label: 'Ditolak' }
+                      ]}
+                      value={statusForm.status}
+                      onChange={handleStatusFormChange}
+                      required
+                    />
 
-                  <FormInput
-                    label="Keterangan Progres (Ditambah ke Linimasa)"
-                    name="keteranganTimeline"
-                    value={statusForm.keteranganTimeline}
-                    onChange={handleStatusFormChange}
-                    placeholder="Contoh: Petugas dikerahkan ke lokasi untuk aspal"
-                  />
+                    <FormInput
+                      label="Keterangan Progres (Ditambah ke Linimasa)"
+                      name="keteranganTimeline"
+                      value={statusForm.keteranganTimeline}
+                      onChange={handleStatusFormChange}
+                      placeholder="Contoh: Petugas dikerahkan ke lokasi untuk aspal"
+                    />
 
-                  <TextArea
-                    label="Tanggapan / Catatan Resmi Admin (Terlihat Warga)"
-                    name="catatanAdmin"
-                    value={statusForm.catatanAdmin}
-                    onChange={handleStatusFormChange}
-                    placeholder="Tuliskan respon resmi pemerintah desa..."
-                    rows={3}
-                  />
+                    <TextArea
+                      label="Tanggapan / Catatan Resmi Admin (Terlihat Warga)"
+                      name="catatanAdmin"
+                      value={statusForm.catatanAdmin}
+                      onChange={handleStatusFormChange}
+                      placeholder="Tuliskan respon resmi pemerintah desa..."
+                      rows={3}
+                    />
 
-                  <Button type="submit" variant="primary" loading={saveLoading} fullWidth icon={RefreshCw}>
-                    Update Status & Kirim
-                  </Button>
-                </form>
+                    <Button type="submit" variant="primary" loading={saveLoading} fullWidth icon={RefreshCw}>
+                      Update Status & Kirim
+                    </Button>
+                  </form>
+                )}
               </Card>
 
               {/* Linimasa view */}

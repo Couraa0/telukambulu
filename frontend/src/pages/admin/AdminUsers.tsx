@@ -25,7 +25,7 @@ export const AdminUsers: React.FC = () => {
     username: '',
     password: '',
     nama: '',
-    role: 'Admin Konten' as 'Super Admin' | 'Admin Konten' | 'Admin Pengaduan' | 'Admin Profil',
+    role: 'Admin Konten' as 'Super Admin' | 'Admin Konten' | 'Admin Pengaduan' | 'Admin Profil' | 'Viewer',
     aktif: true
   });
 
@@ -163,6 +163,7 @@ export const AdminUsers: React.FC = () => {
             <li><span className="font-bold text-amber-700 dark:text-amber-300">Admin Konten</span>: Mengelola berita desa, pengumuman, galeri foto, dan pesona desa (SDA, produk, wisata).</li>
             <li><span className="font-bold text-amber-700 dark:text-amber-300">Admin Pengaduan</span>: Mengelola dan memproses tindak lanjut aduan masyarakat saja.</li>
             <li><span className="font-bold text-amber-700 dark:text-amber-300">Admin Profil</span>: Mengelola sambutan, sejarah, demografi kependudukan, dan kontak desa saja.</li>
+            <li><span className="font-bold text-amber-700 dark:text-amber-300">Viewer</span>: Mengakses seluruh menu administrasi secara read-only (tidak dapat menambah, mengubah, atau menghapus data).</li>
           </ul>
         </div>
       </Card>
@@ -174,7 +175,7 @@ export const AdminUsers: React.FC = () => {
               <td className="px-6 py-4 font-bold text-slate-805 dark:text-white">{item.nama}</td>
               <td className="px-6 py-4 font-mono text-slate-550 dark:text-slate-400">{item.username}</td>
               <td className="px-6 py-4">
-                <Badge type={item.role === 'Super Admin' ? 'danger' : item.role === 'Admin Konten' ? 'info' : item.role === 'Admin Pengaduan' ? 'warning' : 'success'} variant="soft">
+                <Badge type={item.role === 'Super Admin' ? 'danger' : item.role === 'Admin Konten' ? 'info' : item.role === 'Admin Pengaduan' ? 'warning' : item.role === 'Admin Profil' ? 'success' : 'neutral'} variant="soft">
                   {item.role}
                 </Badge>
               </td>
@@ -247,7 +248,8 @@ export const AdminUsers: React.FC = () => {
                 { value: 'Super Admin', label: 'Super Admin (Akses Penuh)' },
                 { value: 'Admin Konten', label: 'Admin Konten (Berita, SDA, UMKM, Wisata)' },
                 { value: 'Admin Pengaduan', label: 'Admin Pengaduan (Tanggap Warga)' },
-                { value: 'Admin Profil', label: 'Admin Profil (Biodata & Kontak)' }
+                { value: 'Admin Profil', label: 'Admin Profil (Biodata & Kontak)' },
+                { value: 'Viewer', label: 'Viewer (Hanya Lihat / Read-Only)' }
               ]}
               value={form.role}
               onChange={handleInputChange}

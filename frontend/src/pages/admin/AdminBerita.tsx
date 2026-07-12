@@ -12,6 +12,7 @@ import Badge from '../../components/common/Badge';
 import SearchBar from '../../components/common/SearchBar';
 import Pagination from '../../components/common/Pagination';
 import useToast from '../../hooks/useToast';
+import { useAuth } from '../../context/AuthContext';
 import { formatDate } from '../../utils/helpers';
 import { Plus, Edit2, Trash2, Calendar, Eye } from 'lucide-react';
 import ImageUpload from '../../components/common/ImageUpload';
@@ -19,6 +20,7 @@ import ImageUpload from '../../components/common/ImageUpload';
 
 export const AdminBerita: React.FC = () => {
   const { showToast } = useToast();
+  const { user } = useAuth();
   
   const [berita, setBerita] = useState<Berita[]>([]);
   const [filtered, setFiltered] = useState<Berita[]>([]);
@@ -183,9 +185,11 @@ export const AdminBerita: React.FC = () => {
           <h1 className="text-2xl font-black text-slate-900 dark:text-white">Kelola Berita & Artikel</h1>
           <p className="text-xs text-slate-400 mt-1">Buat, sunting, dan hapus artikel berita/kegiatan desa.</p>
         </div>
-        <Button size="sm" variant="primary" onClick={openAddModal} icon={Plus}>
-          Tulis Berita
-        </Button>
+        {user?.role !== 'Viewer' && (
+          <Button size="sm" variant="primary" onClick={openAddModal} icon={Plus}>
+            Tulis Berita
+          </Button>
+        )}
       </div>
 
       {/* Filter and Search */}
@@ -227,17 +231,19 @@ export const AdminBerita: React.FC = () => {
                   <button
                     onClick={() => openEditModal(item)}
                     className="p-2 text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/20 rounded-xl"
-                    title="Edit"
+                    title={user?.role === 'Viewer' ? 'Lihat Detail' : 'Edit'}
                   >
-                    <Edit2 size={16} />
+                    {user?.role === 'Viewer' ? <Eye size={16} /> : <Edit2 size={16} />}
                   </button>
-                  <button
-                    onClick={() => triggerDelete(item.id)}
-                    className="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl"
-                    title="Hapus"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                  {user?.role !== 'Viewer' && (
+                    <button
+                      onClick={() => triggerDelete(item.id)}
+                      className="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl"
+                      title="Hapus"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
                 </div>
               </td>
             </tr>
@@ -248,88 +254,92 @@ export const AdminBerita: React.FC = () => {
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
 
       {/* Add / Edit Modal */}
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={selectedItem ? 'Edit Berita' : 'Tulis Berita Baru'}>
+      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={selectedItem ? (user?.role === 'Viewer' ? 'Detail Berita' : 'Edit Berita') : 'Tulis Berita Baru'}>
         <form onSubmit={handleSave} className="flex flex-col gap-4">
-          <FormInput
-            label="Judul Berita"
-            name="judul"
-            value={form.judul}
-            onChange={handleInputChange}
-            placeholder="Contoh: Panen Raya Kelompok Tani Krajan"
-            required
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <fieldset disabled={user?.role === 'Viewer'} className="flex flex-col gap-4">
             <FormInput
-              label="Kategori Berita"
-              name="kategori"
-              value={form.kategori}
+              label="Judul Berita"
+              name="judul"
+              value={form.judul}
               onChange={handleInputChange}
-              placeholder="Contoh: Pertanian, Wisata"
+              placeholder="Contoh: Panen Raya Kelompok Tani Krajan"
               required
             />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormInput
+                label="Kategori Berita"
+                name="kategori"
+                value={form.kategori}
+                onChange={handleInputChange}
+                placeholder="Contoh: Pertanian, Wisata"
+                required
+              />
+              <FormInput
+                label="Nama Penulis"
+                name="penulis"
+                value={form.penulis}
+                onChange={handleInputChange}
+                placeholder="Nama penulis/kontributor"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormInput
+                label="Tanggal Terbit"
+                name="tanggal"
+                type="date"
+                value={form.tanggal}
+                onChange={handleInputChange}
+                required
+              />
+              <SelectInput
+                label="Status Publikasi"
+                name="status"
+                options={[
+                  { value: 'publish', label: 'Terbitkan (Publish)' },
+                  { value: 'draft', label: 'Draf (Draft)' }
+                ]}
+                value={form.status}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <ImageUpload
+              label="Gambar Utama Berita"
+              value={form.gambar}
+              onChange={(url) => setForm(prev => ({ ...prev, gambar: url }))}
+              required
+              disabled={user?.role === 'Viewer'}
+            />
+
             <FormInput
-              label="Nama Penulis"
-              name="penulis"
-              value={form.penulis}
+              label="Ringkasan Berita"
+              name="ringkasan"
+              value={form.ringkasan}
               onChange={handleInputChange}
-              placeholder="Nama penulis/kontributor"
+              placeholder="Masukkan cuplikan ringkasan berita 1-2 kalimat"
+            />
+
+            <TextArea
+              label="Isi Berita Lengkap"
+              name="isi"
+              value={form.isi}
+              onChange={handleInputChange}
+              placeholder="Tulis artikel berita secara detail..."
+              rows={6}
               required
             />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormInput
-              label="Tanggal Terbit"
-              name="tanggal"
-              type="date"
-              value={form.tanggal}
-              onChange={handleInputChange}
-              required
-            />
-            <SelectInput
-              label="Status Publikasi"
-              name="status"
-              options={[
-                { value: 'publish', label: 'Terbitkan (Publish)' },
-                { value: 'draft', label: 'Draf (Draft)' }
-              ]}
-              value={form.status}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <ImageUpload
-            label="Gambar Utama Berita"
-            value={form.gambar}
-            onChange={(url) => setForm(prev => ({ ...prev, gambar: url }))}
-            required
-          />
-
-
-          <FormInput
-            label="Ringkasan Berita"
-            name="ringkasan"
-            value={form.ringkasan}
-            onChange={handleInputChange}
-            placeholder="Masukkan cuplikan ringkasan berita 1-2 kalimat"
-          />
-
-          <TextArea
-            label="Isi Berita Lengkap"
-            name="isi"
-            value={form.isi}
-            onChange={handleInputChange}
-            placeholder="Tulis artikel berita secara detail..."
-            rows={6}
-            required
-          />
+          </fieldset>
 
           <div className="flex justify-end gap-3 border-t border-slate-105 pt-4 mt-2">
             <Button variant="outline" size="sm" onClick={() => setModalOpen(false)}>
-              Batal
+              {user?.role === 'Viewer' ? 'Tutup' : 'Batal'}
             </Button>
-            <Button type="submit" variant="primary" size="sm">
-              Simpan Berita
-            </Button>
+            {user?.role !== 'Viewer' && (
+              <Button type="submit" variant="primary" size="sm">
+                Simpan Berita
+              </Button>
+            )}
           </div>
         </form>
       </Modal>

@@ -5,10 +5,12 @@ import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
 import FormInput from '../../components/common/FormInput';
 import useToast from '../../hooks/useToast';
+import { useAuth } from '../../context/AuthContext';
 import { Save, Contact, Link as LinkIcon, FileText, Trash2, Plus } from 'lucide-react';
 
 export const AdminKontak: React.FC = () => {
   const { showToast } = useToast();
+  const { user } = useAuth();
   
   const [kontak, setKontak] = useState<Kontak | null>(null);
   const [loading, setLoading] = useState(true);
@@ -95,7 +97,8 @@ export const AdminKontak: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <fieldset disabled={user?.role === 'Viewer'} className="contents">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
         {/* Left Column: Core Fields & Socials */}
         <div className="lg:col-span-6 flex flex-col gap-6">
@@ -190,21 +193,25 @@ export const AdminKontak: React.FC = () => {
                 <FileText size={18} className="text-accent-500" />
                 Daftar Persyaratan Surat Administrasi
               </h3>
-              <Button size="sm" variant="outline" onClick={handleAddLayanan} icon={Plus}>
-                Tambah Jenis Surat
-              </Button>
+              {user?.role !== 'Viewer' && (
+                <Button size="sm" variant="outline" onClick={handleAddLayanan} icon={Plus}>
+                  Tambah Jenis Surat
+                </Button>
+              )}
             </div>
 
             <div className="flex flex-col gap-5">
               {kontak?.layananAdministrasi.map((item, idx) => (
                 <div key={idx} className="p-4 bg-slate-50 dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-2xl flex flex-col gap-3 relative">
-                  <button
-                    onClick={() => handleRemoveLayanan(idx)}
-                    className="absolute top-2 right-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 p-2 rounded-xl"
-                    title="Hapus Jenis Surat"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                  {user?.role !== 'Viewer' && (
+                    <button
+                      onClick={() => handleRemoveLayanan(idx)}
+                      className="absolute top-2 right-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 p-2 rounded-xl"
+                      title="Hapus Jenis Surat"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
                   
                   <FormInput
                     label="Nama Layanan Administrasi / Surat"
@@ -233,15 +240,17 @@ export const AdminKontak: React.FC = () => {
               ))}
             </div>
           </Card>
-
-          <div className="flex justify-end gap-3 mt-4">
-            <Button variant="primary" onClick={handleSave} icon={Save} className="py-3 px-6 shadow-md shadow-primary-600/10">
-              Simpan Semua Perubahan
-            </Button>
-          </div>
         </div>
-
       </div>
+    </fieldset>
+ 
+      {user?.role !== 'Viewer' && (
+        <div className="flex justify-end gap-3 mt-4">
+          <Button variant="primary" onClick={handleSave} icon={Save} className="py-3 px-6 shadow-md shadow-primary-600/10">
+            Simpan Semua Perubahan
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

@@ -8,6 +8,7 @@ interface ImageUploadProps {
   onChange: (url: string) => void;
   required?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -15,7 +16,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   value,
   onChange,
   required = false,
-  className = ''
+  className = '',
+  disabled = false
 }) => {
   const [mode, setMode] = useState<'upload' | 'url'>('upload');
   const [loading, setLoading] = useState(false);
@@ -84,6 +86,29 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       setLoading(false);
     }
   };
+
+  if (disabled) {
+    return (
+      <div className={`w-full flex flex-col gap-1.5 ${className}`}>
+        {label && (
+          <label className="block text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-350">
+            {label}
+          </label>
+        )}
+        <div className="flex gap-4 items-center">
+          {value ? (
+            <div className="relative w-40 h-28 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800/80 bg-slate-50 flex-shrink-0 shadow-sm">
+              <img src={value} alt="Preview" className="w-full h-full object-cover" />
+            </div>
+          ) : (
+            <div className="text-xs text-slate-400 dark:text-slate-500 italic bg-slate-100/50 dark:bg-slate-900/10 border border-slate-150 dark:border-slate-850 p-4 rounded-xl flex items-center justify-center w-full h-24">
+              Tidak ada gambar dilampirkan
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`w-full flex flex-col gap-1.5 ${className}`}>

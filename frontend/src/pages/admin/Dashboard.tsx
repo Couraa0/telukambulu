@@ -112,7 +112,7 @@ export const Dashboard: React.FC = () => {
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           
-          {hasRole(['Super Admin', 'Admin Konten']) && (
+          {hasRole(['Super Admin', 'Admin Konten', 'Viewer']) && (
             <>
               <Link
                 to="/admin/berita"
@@ -121,7 +121,9 @@ export const Dashboard: React.FC = () => {
                 <div className="p-3 bg-primary-50 dark:bg-primary-950/20 text-primary-600 rounded-xl mb-3 group-hover:scale-105 transition-transform">
                   <Plus size={20} />
                 </div>
-                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Tulis Berita Baru</span>
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  {user?.role === 'Viewer' ? 'Lihat Berita' : 'Tulis Berita Baru'}
+                </span>
               </Link>
 
               <Link
@@ -131,12 +133,14 @@ export const Dashboard: React.FC = () => {
                 <div className="p-3 bg-primary-50 dark:bg-primary-950/20 text-primary-600 rounded-xl mb-3 group-hover:scale-105 transition-transform">
                   <Megaphone size={20} />
                 </div>
-                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Buat Pengumuman</span>
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  {user?.role === 'Viewer' ? 'Lihat Pengumuman' : 'Buat Pengumuman'}
+                </span>
               </Link>
             </>
           )}
 
-          {hasRole(['Super Admin', 'Admin Pengaduan']) && (
+          {hasRole(['Super Admin', 'Admin Pengaduan', 'Viewer']) && (
             <Link
               to="/admin/pengaduan"
               className="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-rose-500 hover:bg-rose-50/10 transition-all text-center group col-span-1"
@@ -144,11 +148,13 @@ export const Dashboard: React.FC = () => {
               <div className="p-3 bg-rose-50 dark:bg-rose-950/20 text-rose-600 rounded-xl mb-3 group-hover:scale-105 transition-transform">
                 <MessageSquareWarning size={20} />
               </div>
-              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Tinjau Pengaduan</span>
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                {user?.role === 'Viewer' ? 'Tinjau Pengaduan' : 'Tinjau Pengaduan'}
+              </span>
             </Link>
           )}
 
-          {hasRole(['Super Admin', 'Admin Profil']) && (
+          {hasRole(['Super Admin', 'Admin Profil', 'Viewer']) && (
             <Link
               to="/admin/profil-desa"
               className="flex flex-col items-center justify-center p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-secondary-500 hover:bg-secondary-50/10 transition-all text-center group"
@@ -156,7 +162,9 @@ export const Dashboard: React.FC = () => {
               <div className="p-3 bg-secondary-50 dark:bg-secondary-950/20 text-secondary-600 rounded-xl mb-3 group-hover:scale-105 transition-transform">
                 <ShieldCheck size={20} />
               </div>
-              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Edit Profil Desa</span>
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                {user?.role === 'Viewer' ? 'Lihat Profil Desa' : 'Edit Profil Desa'}
+              </span>
             </Link>
           )}
 
@@ -167,7 +175,7 @@ export const Dashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Recent Complaints */}
-        {hasRole(['Super Admin', 'Admin Pengaduan']) && (
+        {hasRole(['Super Admin', 'Admin Pengaduan', 'Viewer']) && (
           <Card>
             <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100 dark:border-slate-800">
               <h3 className="text-sm font-bold text-slate-855 dark:text-white uppercase tracking-wider flex items-center gap-2">
@@ -216,7 +224,7 @@ export const Dashboard: React.FC = () => {
         )}
 
         {/* Recent News */}
-        {hasRole(['Super Admin', 'Admin Konten']) && (
+        {hasRole(['Super Admin', 'Admin Konten', 'Viewer']) && (
           <Card>
             <div className="flex justify-between items-center mb-5 pb-3 border-b border-slate-100 dark:border-slate-800">
               <h3 className="text-sm font-bold text-slate-855 dark:text-white uppercase tracking-wider flex items-center gap-2">
@@ -257,7 +265,7 @@ export const Dashboard: React.FC = () => {
                       to="/admin/berita"
                       className="text-xs font-bold text-secondary-600 hover:underline flex-shrink-0"
                     >
-                      Edit
+                      {user?.role === 'Viewer' ? 'Lihat' : 'Edit'}
                     </Link>
                   </div>
                 ))}

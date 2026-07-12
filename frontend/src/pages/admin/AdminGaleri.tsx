@@ -11,13 +11,15 @@ import Modal from '../../components/common/Modal';
 import Badge from '../../components/common/Badge';
 import SearchBar from '../../components/common/SearchBar';
 import useToast from '../../hooks/useToast';
+import { useAuth } from '../../context/AuthContext';
 import { formatDate } from '../../utils/helpers';
-import { Plus, Edit2, Trash2, Calendar } from 'lucide-react';
+import { Plus, Edit2, Trash2, Calendar, Eye } from 'lucide-react';
 import ImageUpload from '../../components/common/ImageUpload';
 
 
 export const AdminGaleri: React.FC = () => {
   const { showToast } = useToast();
+  const { user } = useAuth();
   
   const [galeri, setGaleri] = useState<Galeri[]>([]);
   const [filtered, setFiltered] = useState<Galeri[]>([]);
@@ -161,9 +163,11 @@ export const AdminGaleri: React.FC = () => {
           <h1 className="text-2xl font-black text-slate-900 dark:text-white">Kelola Galeri Kegiatan</h1>
           <p className="text-xs text-slate-400 mt-1">Kelola album dokumentasi visual kegiatan resmi warga dan pemdes.</p>
         </div>
-        <Button size="sm" variant="primary" onClick={openAddModal} icon={Plus}>
-          Tambah Foto Dokumentasi
-        </Button>
+        {user?.role !== 'Viewer' && (
+          <Button size="sm" variant="primary" onClick={openAddModal} icon={Plus}>
+            Tambah Foto Dokumentasi
+          </Button>
+        )}
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-4 rounded-2xl shadow-sm">
@@ -200,12 +204,22 @@ export const AdminGaleri: React.FC = () => {
               </td>
               <td className="px-6 py-4">
                 <div className="flex items-center gap-2">
-                  <button onClick={() => openEditModal(item)} className="p-2 text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/20 rounded-xl">
-                    <Edit2 size={16} />
+                  <button
+                    onClick={() => openEditModal(item)}
+                    className="p-2 text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/20 rounded-xl"
+                    title={user?.role === 'Viewer' ? 'Lihat Detail' : 'Edit'}
+                  >
+                    {user?.role === 'Viewer' ? <Eye size={16} /> : <Edit2 size={16} />}
                   </button>
-                  <button onClick={() => triggerDelete(item.id)} className="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl">
-                    <Trash2 size={16} />
-                  </button>
+                  {user?.role !== 'Viewer' && (
+                    <button
+                      onClick={() => triggerDelete(item.id)}
+                      className="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl"
+                      title="Hapus"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
                 </div>
               </td>
             </tr>
@@ -214,56 +228,62 @@ export const AdminGaleri: React.FC = () => {
       </Card>
 
       {/* Add / Edit Modal */}
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={selectedItem ? 'Edit Dokumentasi Foto' : 'Tambah Foto Kegiatan Baru'}>
+      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={selectedItem ? (user?.role === 'Viewer' ? 'Detail Dokumentasi Foto' : 'Edit Dokumentasi Foto') : 'Tambah Foto Kegiatan Baru'}>
         <form onSubmit={handleSave} className="flex flex-col gap-4">
-          <FormInput
-            label="Judul Foto Kegiatan"
-            name="judul"
-            value={form.judul}
-            onChange={handleInputChange}
-            placeholder="Contoh: Rapat Musrenbang 2026"
-            required
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <fieldset disabled={user?.role === 'Viewer'} className="flex flex-col gap-4">
             <FormInput
-              label="Kategori Kegiatan"
-              name="kategori"
-              value={form.kategori}
+              label="Judul Foto Kegiatan"
+              name="judul"
+              value={form.judul}
               onChange={handleInputChange}
-              placeholder="Contoh: Pemerintahan, Kesehatan, Budaya"
+              placeholder="Contoh: Rapat Musrenbang 2026"
               required
             />
-            <FormInput
-              label="Tanggal Kegiatan"
-              name="tanggal"
-              type="date"
-              value={form.tanggal}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormInput
+                label="Kategori Kegiatan"
+                name="kategori"
+                value={form.kategori}
+                onChange={handleInputChange}
+                placeholder="Contoh: Pemerintahan, Kesehatan, Budaya"
+                required
+              />
+              <FormInput
+                label="Tanggal Kegiatan"
+                name="tanggal"
+                type="date"
+                value={form.tanggal}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+
+            <ImageUpload
+              label="Foto Dokumentasi Acara"
+              value={form.foto}
+              onChange={(url) => setForm(prev => ({ ...prev, foto: url }))}
+              required
+              disabled={user?.role === 'Viewer'}
+            />
+
+            <TextArea
+              label="Deskripsi Singkat Acara"
+              name="deskripsi"
+              value={form.deskripsi}
               onChange={handleInputChange}
+              placeholder="Tuliskan keterangan detail mengenai acara atau kegiatan yang dilaksanakan..."
+              rows={4}
               required
             />
-          </div>
-
-          <ImageUpload
-            label="Foto Dokumentasi Acara"
-            value={form.foto}
-            onChange={(url) => setForm(prev => ({ ...prev, foto: url }))}
-            required
-          />
-
-
-          <TextArea
-            label="Deskripsi Singkat Acara"
-            name="deskripsi"
-            value={form.deskripsi}
-            onChange={handleInputChange}
-            placeholder="Tuliskan keterangan detail mengenai acara atau kegiatan yang dilaksanakan..."
-            rows={4}
-            required
-          />
+          </fieldset>
 
           <div className="flex justify-end gap-3 border-t border-slate-105 pt-4 mt-2">
-            <Button variant="outline" size="sm" onClick={() => setModalOpen(false)}>Batal</Button>
-            <Button type="submit" variant="primary" size="sm">Simpan Foto</Button>
+            <Button variant="outline" size="sm" onClick={() => setModalOpen(false)}>
+              {user?.role === 'Viewer' ? 'Tutup' : 'Batal'}
+            </Button>
+            {user?.role !== 'Viewer' && (
+              <Button type="submit" variant="primary" size="sm">Simpan Foto</Button>
+            )}
           </div>
         </form>
       </Modal>

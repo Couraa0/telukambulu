@@ -40,31 +40,31 @@
       "id": 2,
       "nama": "Mulyadi, S.E",
       "jabatan": "Sekretaris Desa",
-      "foto": "https://pzfkmwmrkmculfxnhjuj.supabase.co/storage/v1/object/public/images/7338eb2dbd81b80853abf588d3022499.jpg"
+      "foto": ""
     },
     {
       "id": 3,
       "nama": "Siti Aminah",
       "jabatan": "Kaur Keuangan",
-      "foto": "https://pzfkmwmrkmculfxnhjuj.supabase.co/storage/v1/object/public/images/0b79ee8538a91ad3cc3ab59c2e7a45de.jpg"
+      "foto": ""
     },
     {
       "id": 4,
       "nama": "Kurniawan",
       "jabatan": "Kaur Pemerintahan",
-      "foto": "https://pzfkmwmrkmculfxnhjuj.supabase.co/storage/v1/object/public/images/852943478fb4fa84ddc9c306c730683c.jpg"
+      "foto": ""
     },
     {
       "id": 5,
       "nama": "Dedi Mulyono",
       "jabatan": "Kasi Kesejahteraan Rakyat",
-      "foto": "https://pzfkmwmrkmculfxnhjuj.supabase.co/storage/v1/object/public/images/cb1592eecfb79783be74ae564c63fe88.jpg"
+      "foto": ""
     },
     {
       "id": 6,
       "nama": "Neneng Hasanah",
       "jabatan": "Kaur Tata Usaha dan Umum",
-      "foto": "https://pzfkmwmrkmculfxnhjuj.supabase.co/storage/v1/object/public/images/110f18b13ce7f4195aa9aa11eee036a0.jpg"
+      "foto": ""
     }
   ],
   "demografi": {

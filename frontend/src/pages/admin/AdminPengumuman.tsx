@@ -12,11 +12,13 @@ import Badge from '../../components/common/Badge';
 import SearchBar from '../../components/common/SearchBar';
 import Pagination from '../../components/common/Pagination';
 import useToast from '../../hooks/useToast';
+import { useAuth } from '../../context/AuthContext';
 import { formatDate } from '../../utils/helpers';
-import { Plus, Edit2, Trash2, Calendar } from 'lucide-react';
+import { Plus, Edit2, Trash2, Calendar, Eye } from 'lucide-react';
 
 export const AdminPengumuman: React.FC = () => {
   const { showToast } = useToast();
+  const { user } = useAuth();
   
   const [pengumuman, setPengumuman] = useState<Pengumuman[]>([]);
   const [filtered, setFiltered] = useState<Pengumuman[]>([]);
@@ -183,9 +185,11 @@ export const AdminPengumuman: React.FC = () => {
           <h1 className="text-2xl font-black text-slate-900 dark:text-white">Kelola Pengumuman Desa</h1>
           <p className="text-xs text-slate-400 mt-1">Buat, sunting, dan hapus pengumuman resmi desa.</p>
         </div>
-        <Button size="sm" variant="primary" onClick={openAddModal} icon={Plus}>
-          Buat Pengumuman
-        </Button>
+        {user?.role !== 'Viewer' && (
+          <Button size="sm" variant="primary" onClick={openAddModal} icon={Plus}>
+            Buat Pengumuman
+          </Button>
+        )}
       </div>
 
       {/* Filter and Search */}
@@ -230,17 +234,19 @@ export const AdminPengumuman: React.FC = () => {
                   <button
                     onClick={() => openEditModal(item)}
                     className="p-2 text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/20 rounded-xl"
-                    title="Edit"
+                    title={user?.role === 'Viewer' ? 'Lihat Detail' : 'Edit'}
                   >
-                    <Edit2 size={16} />
+                    {user?.role === 'Viewer' ? <Eye size={16} /> : <Edit2 size={16} />}
                   </button>
-                  <button
-                    onClick={() => triggerDelete(item.id)}
-                    className="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl"
-                    title="Hapus"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                  {user?.role !== 'Viewer' && (
+                    <button
+                      onClick={() => triggerDelete(item.id)}
+                      className="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl"
+                      title="Hapus"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
                 </div>
               </td>
             </tr>
@@ -251,84 +257,88 @@ export const AdminPengumuman: React.FC = () => {
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
 
       {/* Add / Edit Modal */}
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={selectedItem ? 'Edit Pengumuman' : 'Buat Pengumuman Baru'}>
+      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={selectedItem ? (user?.role === 'Viewer' ? 'Detail Pengumuman' : 'Edit Pengumuman') : 'Buat Pengumuman Baru'}>
         <form onSubmit={handleSave} className="flex flex-col gap-4">
-          <FormInput
-            label="Judul Pengumuman"
-            name="judul"
-            value={form.judul}
-            onChange={handleInputChange}
-            placeholder="Contoh: Jadwal Pembagian BLT Triwulan II"
-            required
-          />
-          <FormInput
-            label="Kategori Pengumuman"
-            name="kategori"
-            value={form.kategori}
-            onChange={handleInputChange}
-            placeholder="Contoh: Bantuan Sosial, Pemberdayaan"
-            required
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <fieldset disabled={user?.role === 'Viewer'} className="flex flex-col gap-4">
             <FormInput
-              label="Tanggal Publikasi"
-              name="tanggal"
-              type="date"
-              value={form.tanggal}
+              label="Judul Pengumuman"
+              name="judul"
+              value={form.judul}
               onChange={handleInputChange}
+              placeholder="Contoh: Jadwal Pembagian BLT Triwulan II"
               required
             />
-            <SelectInput
-              label="Status Publikasi"
-              name="status"
-              options={[
-                { value: 'publish', label: 'Terbitkan (Publish)' },
-                { value: 'draft', label: 'Draf (Draft)' }
-              ]}
-              value={form.status}
+            <FormInput
+              label="Kategori Pengumuman"
+              name="kategori"
+              value={form.kategori}
               onChange={handleInputChange}
+              placeholder="Contoh: Bantuan Sosial, Pemberdayaan"
+              required
             />
-          </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormInput
+                label="Tanggal Publikasi"
+                name="tanggal"
+                type="date"
+                value={form.tanggal}
+                onChange={handleInputChange}
+                required
+              />
+              <SelectInput
+                label="Status Publikasi"
+                name="status"
+                options={[
+                  { value: 'publish', label: 'Terbitkan (Publish)' },
+                  { value: 'draft', label: 'Draf (Draft)' }
+                ]}
+                value={form.status}
+                onChange={handleInputChange}
+              />
+            </div>
 
-          <div className="flex items-center gap-2 py-1.5">
-            <input
-              type="checkbox"
-              id="penting"
-              name="penting"
-              checked={form.penting}
+            <div className="flex items-center gap-2 py-1.5">
+              <input
+                type="checkbox"
+                id="penting"
+                name="penting"
+                checked={form.penting}
+                onChange={handleInputChange}
+                className="w-4.5 h-4.5 text-primary-600 border-slate-300 rounded focus:ring-primary-500 disabled:opacity-50"
+              />
+              <label htmlFor="penting" className="text-sm font-semibold text-slate-700 dark:text-slate-350 cursor-pointer">
+                Tandai sebagai PENTING / DARURAT (Muncul badge merah menyala)
+              </label>
+            </div>
+
+            <FormInput
+              label="Ringkasan Pendek (Untuk Tampilan Card)"
+              name="ringkasan"
+              value={form.ringkasan}
               onChange={handleInputChange}
-              className="w-4.5 h-4.5 text-primary-600 border-slate-300 rounded focus:ring-primary-500"
+              placeholder="Tulis ringkasan singkat dalam 1-2 kalimat"
             />
-            <label htmlFor="penting" className="text-sm font-semibold text-slate-700 dark:text-slate-350 cursor-pointer">
-              Tandai sebagai PENTING / DARURAT (Muncul badge merah menyala)
-            </label>
-          </div>
 
-          <FormInput
-            label="Ringkasan Pendek (Untuk Tampilan Card)"
-            name="ringkasan"
-            value={form.ringkasan}
-            onChange={handleInputChange}
-            placeholder="Tulis ringkasan singkat dalam 1-2 kalimat"
-          />
-
-          <TextArea
-            label="Isi Lengkap Pengumuman"
-            name="isi"
-            value={form.isi}
-            onChange={handleInputChange}
-            placeholder="Tulis isi pengumuman lengkap secara lengkap..."
-            rows={5}
-            required
-          />
+            <TextArea
+              label="Isi Lengkap Pengumuman"
+              name="isi"
+              value={form.isi}
+              onChange={handleInputChange}
+              placeholder="Tulis isi pengumuman lengkap secara lengkap..."
+              rows={5}
+              required
+            />
+          </fieldset>
 
           <div className="flex justify-end gap-3 border-t border-slate-105 pt-4 mt-2">
             <Button variant="outline" size="sm" onClick={() => setModalOpen(false)}>
-              Batal
+              {user?.role === 'Viewer' ? 'Tutup' : 'Batal'}
             </Button>
-            <Button type="submit" variant="primary" size="sm">
-              Simpan Pengumuman
-            </Button>
+            {user?.role !== 'Viewer' && (
+              <Button type="submit" variant="primary" size="sm">
+                Simpan Pengumuman
+              </Button>
+            )}
           </div>
         </form>
       </Modal>

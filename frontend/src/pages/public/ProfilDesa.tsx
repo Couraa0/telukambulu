@@ -155,7 +155,7 @@ export const ProfilDesa: React.FC = () => {
             perangkat.map((item) => (
               <Card key={item.id} hoverEffect noPadding className="flex flex-col overflow-hidden text-center">
                 <img
-                  src={item.foto || "/assets/images/kepala-desa.png"}
+                  src={item.foto || "/assets/images/no-photo.svg"}
                   alt={item.nama}
                   className="w-full h-44 object-cover bg-slate-100"
                 />

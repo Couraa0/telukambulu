@@ -11,12 +11,14 @@ import Modal from '../../components/common/Modal';
 import Badge from '../../components/common/Badge';
 import SearchBar from '../../components/common/SearchBar';
 import useToast from '../../hooks/useToast';
-import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { Plus, Edit2, Trash2, Eye } from 'lucide-react';
 import ImageUpload from '../../components/common/ImageUpload';
 
 
 export const AdminProduk: React.FC = () => {
   const { showToast } = useToast();
+  const { user } = useAuth();
   
   const [produk, setProduk] = useState<Produk[]>([]);
   const [filtered, setFiltered] = useState<Produk[]>([]);
@@ -169,9 +171,11 @@ export const AdminProduk: React.FC = () => {
           <h1 className="text-2xl font-black text-slate-900 dark:text-white">Kelola Produk Unggulan UMKM</h1>
           <p className="text-xs text-slate-400 mt-1">Kelola katalog promosi dan pemasaran produk kerajinan/kuliner pelaku UMKM warga desa.</p>
         </div>
-        <Button size="sm" variant="primary" onClick={openAddModal} icon={Plus}>
-          Tambah Produk
-        </Button>
+        {user?.role !== 'Viewer' && (
+          <Button size="sm" variant="primary" onClick={openAddModal} icon={Plus}>
+            Tambah Produk
+          </Button>
+        )}
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-4 rounded-2xl shadow-sm">
@@ -199,12 +203,22 @@ export const AdminProduk: React.FC = () => {
               <td className="px-6 py-4 text-slate-700 dark:text-slate-300 font-semibold">{item.penjual}</td>
               <td className="px-6 py-4">
                 <div className="flex items-center gap-2">
-                  <button onClick={() => openEditModal(item)} className="p-2 text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/20 rounded-xl">
-                    <Edit2 size={16} />
+                  <button
+                    onClick={() => openEditModal(item)}
+                    className="p-2 text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/20 rounded-xl"
+                    title={user?.role === 'Viewer' ? 'Lihat Detail' : 'Edit'}
+                  >
+                    {user?.role === 'Viewer' ? <Eye size={16} /> : <Edit2 size={16} />}
                   </button>
-                  <button onClick={() => triggerDelete(item.id)} className="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl">
-                    <Trash2 size={16} />
-                  </button>
+                  {user?.role !== 'Viewer' && (
+                    <button
+                      onClick={() => triggerDelete(item.id)}
+                      className="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl"
+                      title="Hapus"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
                 </div>
               </td>
             </tr>
@@ -213,91 +227,97 @@ export const AdminProduk: React.FC = () => {
       </Card>
 
       {/* Add / Edit Modal */}
-      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={selectedItem ? 'Edit Produk UMKM' : 'Tambah Produk Baru'}>
+      <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title={selectedItem ? (user?.role === 'Viewer' ? 'Detail Produk UMKM' : 'Edit Produk UMKM') : 'Tambah Produk Baru'}>
         <form onSubmit={handleSave} className="flex flex-col gap-4">
-          <FormInput
-            label="Nama Produk Lokal"
-            name="nama"
-            value={form.nama}
-            onChange={handleInputChange}
-            placeholder="Contoh: Besek Bambu Bulat"
-            required
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <fieldset disabled={user?.role === 'Viewer'} className="flex flex-col gap-4">
             <FormInput
-              label="Kategori Produk"
-              name="kategori"
-              value={form.kategori}
+              label="Nama Produk Lokal"
+              name="nama"
+              value={form.nama}
               onChange={handleInputChange}
-              placeholder="Contoh: Kerajinan, Kuliner"
+              placeholder="Contoh: Besek Bambu Bulat"
               required
             />
-            <FormInput
-              label="Harga Jual / Kisaran Harga"
-              name="harga"
-              value={form.harga}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormInput
+                label="Kategori Produk"
+                name="kategori"
+                value={form.kategori}
+                onChange={handleInputChange}
+                placeholder="Contoh: Kerajinan, Kuliner"
+                required
+              />
+              <FormInput
+                label="Harga Jual / Kisaran Harga"
+                name="harga"
+                value={form.harga}
+                onChange={handleInputChange}
+                placeholder="Contoh: Rp 25.000 / pcs"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormInput
+                label="Nama Pelaku Usaha / Pengrajin"
+                name="penjual"
+                value={form.penjual}
+                onChange={handleInputChange}
+                placeholder="Contoh: Kelompok Wanita Tani Melati"
+                required
+              />
+              <FormInput
+                label="Nomor WhatsApp Penjual (Tanpa tanda + / 62)"
+                name="kontak"
+                value={form.kontak}
+                onChange={handleInputChange}
+                placeholder="Contoh: 81234567890"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <FormInput
+                label="Ketersediaan Stok / Keterangan"
+                name="stok"
+                value={form.stok}
+                onChange={handleInputChange}
+                placeholder="Contoh: Ready / Pre-order 3 hari"
+              />
+              <FormInput
+                label="Alamat / Lokasi Usaha"
+                name="lokasi"
+                value={form.lokasi}
+                onChange={handleInputChange}
+                placeholder="Contoh: Dusun Krajan RT 01/RW 03"
+              />
+            </div>
+
+            <ImageUpload
+              label="Foto Produk"
+              value={form.foto}
+              onChange={(url) => setForm(prev => ({ ...prev, foto: url }))}
+              disabled={user?.role === 'Viewer'}
+            />
+
+            <TextArea
+              label="Deskripsi Detail Produk"
+              name="deskripsi"
+              value={form.deskripsi}
               onChange={handleInputChange}
-              placeholder="Contoh: Rp 25.000 / pcs"
+              placeholder="Uraikan detail bahan, kelebihan produk, dan info spesifikasi lainnya..."
+              rows={4}
               required
             />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormInput
-              label="Nama Pelaku Usaha / Pengrajin"
-              name="penjual"
-              value={form.penjual}
-              onChange={handleInputChange}
-              placeholder="Contoh: Kelompok Wanita Tani Melati"
-              required
-            />
-            <FormInput
-              label="Nomor WhatsApp Penjual (Tanpa tanda + / 62)"
-              name="kontak"
-              value={form.kontak}
-              onChange={handleInputChange}
-              placeholder="Contoh: 81234567890"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormInput
-              label="Ketersediaan Stok / Keterangan"
-              name="stok"
-              value={form.stok}
-              onChange={handleInputChange}
-              placeholder="Contoh: Ready / Pre-order 3 hari"
-            />
-            <FormInput
-              label="Alamat / Lokasi Usaha"
-              name="lokasi"
-              value={form.lokasi}
-              onChange={handleInputChange}
-              placeholder="Contoh: Dusun Krajan RT 01/RW 03"
-            />
-          </div>
-
-          <ImageUpload
-            label="Foto Produk"
-            value={form.foto}
-            onChange={(url) => setForm(prev => ({ ...prev, foto: url }))}
-          />
-
-
-          <TextArea
-            label="Deskripsi Detail Produk"
-            name="deskripsi"
-            value={form.deskripsi}
-            onChange={handleInputChange}
-            placeholder="Uraikan detail bahan, kelebihan produk, dan info spesifikasi lainnya..."
-            rows={4}
-            required
-          />
+          </fieldset>
 
           <div className="flex justify-end gap-3 border-t border-slate-105 pt-4 mt-2">
-            <Button variant="outline" size="sm" onClick={() => setModalOpen(false)}>Batal</Button>
-            <Button type="submit" variant="primary" size="sm">Simpan Produk</Button>
+            <Button variant="outline" size="sm" onClick={() => setModalOpen(false)}>
+              {user?.role === 'Viewer' ? 'Tutup' : 'Batal'}
+            </Button>
+            {user?.role !== 'Viewer' && (
+              <Button type="submit" variant="primary" size="sm">Simpan Produk</Button>
+            )}
           </div>
         </form>
       </Modal>

@@ -30,7 +30,7 @@ export const AdminLayout: React.FC = () => {
     if (path === '/admin/dashboard') return true; // Available to all roles
     
     if (path.startsWith('/admin/profil-desa') || path.startsWith('/admin/kontak')) {
-      return hasRole(['Super Admin', 'Admin Profil']);
+      return hasRole(['Super Admin', 'Admin Profil', 'Viewer']);
     }
     
     if (
@@ -39,11 +39,11 @@ export const AdminLayout: React.FC = () => {
       path.startsWith('/admin/galeri') ||
       path.startsWith('/admin/pesona-desa')
     ) {
-      return hasRole(['Super Admin', 'Admin Konten']);
+      return hasRole(['Super Admin', 'Admin Konten', 'Viewer']);
     }
     
     if (path.startsWith('/admin/pengaduan')) {
-      return hasRole(['Super Admin', 'Admin Pengaduan']);
+      return hasRole(['Super Admin', 'Admin Pengaduan', 'Viewer']);
     }
     
     if (path.startsWith('/admin/users')) {

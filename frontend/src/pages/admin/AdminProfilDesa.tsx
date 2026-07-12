@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import { Profil, Perangkat, Demografi, DusunDemografi } from '../../data/initialData';
 import Card from '../../components/common/Card';
 import Button from '../../components/common/Button';
@@ -18,13 +19,15 @@ import {
   Building,
   School,
   Briefcase,
-  Layers
+  Layers,
+  Eye
 } from 'lucide-react';
 import ImageUpload from '../../components/common/ImageUpload';
 
 
 export const AdminProfilDesa: React.FC = () => {
   const { showToast } = useToast();
+  const { user } = useAuth();
   
   // Tab State
   const [activeTab, setActiveTab] = useState<'profil' | 'perangkat' | 'demografi'>('profil');
@@ -299,7 +302,8 @@ export const AdminProfilDesa: React.FC = () => {
       {/* 1. Tab: Profil Utama */}
       {activeTab === 'profil' && profilForm && (
         <Card className="flex flex-col gap-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <fieldset disabled={user?.role === 'Viewer'} className="contents">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <TextArea
               label="Sejarah Desa"
               name="sejarah"
@@ -338,19 +342,23 @@ export const AdminProfilDesa: React.FC = () => {
                     type="text"
                     value={item}
                     onChange={(e) => handleMisiChange(idx, e.target.value)}
-                    className="w-full text-sm rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full text-sm rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/50 py-2 px-3 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-60 disabled:cursor-not-allowed"
                   />
-                  <button
-                    onClick={() => handleRemoveMisi(idx)}
-                    className="text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 p-2 rounded-xl"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                  {user?.role !== 'Viewer' && (
+                    <button
+                      onClick={() => handleRemoveMisi(idx)}
+                      className="text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 p-2 rounded-xl"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
                 </div>
               ))}
-              <Button size="sm" variant="outline" onClick={handleAddMisi} className="mt-2 w-max">
-                + Tambah Baris Misi
-              </Button>
+              {user?.role !== 'Viewer' && (
+                <Button size="sm" variant="outline" onClick={handleAddMisi} className="mt-2 w-max">
+                  + Tambah Baris Misi
+                </Button>
+              )}
             </div>
           </div>
 
@@ -377,6 +385,7 @@ export const AdminProfilDesa: React.FC = () => {
                   ...prev,
                   kepalaDesa: { ...prev.kepalaDesa, foto: url }
                 }) : null)}
+                disabled={user?.role === 'Viewer'}
               />
             </div>
           </div>
@@ -389,12 +398,14 @@ export const AdminProfilDesa: React.FC = () => {
                 label="Logo Desa"
                 value={profilForm.logo || ''}
                 onChange={(url) => setProfilForm(prev => prev ? ({ ...prev, logo: url }) : null)}
+                disabled={user?.role === 'Viewer'}
               />
 
               <ImageUpload
                 label="Foto Kantor Desa"
                 value={profilForm.fotoKantor}
                 onChange={(url) => setProfilForm(prev => prev ? ({ ...prev, fotoKantor: url }) : null)}
+                disabled={user?.role === 'Viewer'}
               />
 
               <FormInput
@@ -406,12 +417,15 @@ export const AdminProfilDesa: React.FC = () => {
 
             </div>
           </div>
+          </fieldset>
 
-          <div className="flex justify-end border-t border-slate-100 dark:border-slate-800 pt-5">
-            <Button variant="primary" onClick={saveProfil} icon={Save}>
-              Simpan Perubahan Profil
-            </Button>
-          </div>
+          {user?.role !== 'Viewer' && (
+            <div className="flex justify-end border-t border-slate-100 dark:border-slate-800 pt-5">
+              <Button variant="primary" onClick={saveProfil} icon={Save}>
+                Simpan Perubahan Profil
+              </Button>
+            </div>
+          )}
         </Card>
       )}
 
@@ -419,36 +433,53 @@ export const AdminProfilDesa: React.FC = () => {
       {activeTab === 'perangkat' && (
         <Card className="flex flex-col gap-5">
           <div className="flex justify-between items-center mb-2">
-            <h3 className="text-base font-bold text-slate-850 dark:text-white font-sans">Daftar Perangkat Desa</h3>
-            <Button size="sm" variant="primary" onClick={openAddPerangkat} icon={Plus}>
-              Tambah Aparatur
-            </Button>
+            <h3 className="text-base font-bold text-slate-855 dark:text-white font-sans">Daftar Perangkat Desa</h3>
+            {user?.role !== 'Viewer' && (
+              <Button size="sm" variant="primary" onClick={openAddPerangkat} icon={Plus}>
+                Tambah Aparatur
+              </Button>
+            )}
           </div>
 
-          <Table headers={['Nama', 'Jabatan', 'Foto URL', 'Aksi']} empty={perangkat.length === 0}>
+          <Table headers={['Nama', 'Jabatan', 'Foto', 'Aksi']} empty={perangkat.length === 0}>
             {perangkat.map((item) => (
               <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-slate-850/50 transition-colors">
                 <td className="px-6 py-4 font-bold text-slate-800 dark:text-white truncate max-w-[180px]">{item.nama}</td>
                 <td className="px-6 py-4 font-semibold text-slate-655 dark:text-slate-400">{item.jabatan}</td>
-                <td className="px-6 py-4 font-mono text-slate-400 text-xs truncate max-w-[200px]" title={item.foto}>
-                  {item.foto}
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-2">
+                    <img
+                      src={item.foto || "/assets/images/no-photo.svg"}
+                      alt={item.nama}
+                      className="w-10 h-10 rounded-full object-cover bg-slate-100 border border-slate-200 dark:border-slate-800 shadow-sm"
+                    />
+                    {item.foto ? (
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-mono truncate max-w-[120px]" title={item.foto}>
+                        {item.foto.substring(item.foto.lastIndexOf('/') + 1)}
+                      </span>
+                    ) : (
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 italic">Tanpa Foto</span>
+                    )}
+                  </div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => openEditPerangkat(item)}
                       className="p-2 text-sky-500 hover:bg-sky-50 dark:hover:bg-sky-950/20 rounded-xl"
-                      title="Edit"
+                      title={user?.role === 'Viewer' ? 'Lihat Detail' : 'Edit'}
                     >
-                      <Edit2 size={16} />
+                      {user?.role === 'Viewer' ? <Eye size={16} /> : <Edit2 size={16} />}
                     </button>
-                    <button
-                      onClick={() => triggerDeletePerangkat(item.id)}
-                      className="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl"
-                      title="Hapus"
-                    >
-                      <Trash2 size={16} />
-                    </button>
+                    {user?.role !== 'Viewer' && (
+                      <button
+                        onClick={() => triggerDeletePerangkat(item.id)}
+                        className="p-2 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl"
+                        title="Hapus"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -460,6 +491,7 @@ export const AdminProfilDesa: React.FC = () => {
       {/* 3. Tab: Data Demografi */}
       {activeTab === 'demografi' && demoForm && (
         <Card className="flex flex-col gap-6">
+          <fieldset disabled={user?.role === 'Viewer'} className="contents">
           
           {/* Gender and general stats */}
           <div>
@@ -492,14 +524,16 @@ export const AdminProfilDesa: React.FC = () => {
                 <Layers size={18} className="text-secondary-500" />
                 Rincian Administratif Dusun
               </h4>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleAddDusun}
-                icon={Plus}
-              >
-                Tambah Dusun
-              </Button>
+              {user?.role !== 'Viewer' && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleAddDusun}
+                  icon={Plus}
+                >
+                  Tambah Dusun
+                </Button>
+              )}
             </div>
             <div className="flex flex-col gap-4">
               {demoForm.dusunList.map((dusun, idx) => (
@@ -539,14 +573,16 @@ export const AdminProfilDesa: React.FC = () => {
                     onChange={(e) => handleDusunDemoChange(idx, 'jiwa', e.target.value)}
                     className="w-full sm:w-28"
                   />
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => handleRemoveDusun(idx)}
-                    icon={Trash2}
-                    title="Hapus Dusun"
-                    className="w-full sm:w-auto h-10 flex items-center justify-center"
-                  />
+                  {user?.role !== 'Viewer' && (
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => handleRemoveDusun(idx)}
+                      icon={Trash2}
+                      title="Hapus Dusun"
+                      className="w-full sm:w-auto h-10 flex items-center justify-center"
+                    />
+                  )}
                 </div>
               ))}
             </div>
@@ -592,12 +628,15 @@ export const AdminProfilDesa: React.FC = () => {
               </div>
             </div>
           </div>
+          </fieldset>
 
-          <div className="flex justify-end border-t border-slate-100 dark:border-slate-800 pt-5">
-            <Button variant="primary" onClick={saveDemGrid} icon={Save}>
-              Simpan Perubahan Demografi
-            </Button>
-          </div>
+          {user?.role !== 'Viewer' && (
+            <div className="flex justify-end border-t border-slate-100 dark:border-slate-800 pt-5">
+              <Button variant="primary" onClick={saveDemGrid} icon={Save}>
+                Simpan Perubahan Demografi
+              </Button>
+            </div>
+          )}
         </Card>
       )}
 
@@ -605,38 +644,43 @@ export const AdminProfilDesa: React.FC = () => {
       <Modal
         isOpen={perangkatModal}
         onClose={() => setPerangkatModal(false)}
-        title={selectedPerangkat ? 'Edit Data Aparatur' : 'Tambah Aparatur Desa'}
+        title={selectedPerangkat ? (user?.role === 'Viewer' ? 'Detail Data Aparatur' : 'Edit Data Aparatur') : 'Tambah Aparatur Desa'}
       >
         <form onSubmit={savePerangkat} className="flex flex-col gap-4">
-          <FormInput
-            label="Nama Lengkap Perangkat"
-            name="nama"
-            value={perangkatForm.nama}
-            onChange={handlePerangkatFormChange}
-            placeholder="Masukkan nama beserta gelar"
-            required
-          />
-          <FormInput
-            label="Jabatan / Fungsi"
-            name="jabatan"
-            value={perangkatForm.jabatan}
-            onChange={handlePerangkatFormChange}
-            placeholder="Contoh: Kaur Keuangan"
-            required
-          />
-          <ImageUpload
-            label="Foto Profil Aparatur"
-            value={perangkatForm.foto}
-            onChange={(url) => setPerangkatForm(prev => ({ ...prev, foto: url }))}
-          />
-
+          <fieldset disabled={user?.role === 'Viewer'} className="flex flex-col gap-4">
+            <FormInput
+              label="Nama Lengkap Perangkat"
+              name="nama"
+              value={perangkatForm.nama}
+              onChange={handlePerangkatFormChange}
+              placeholder="Masukkan nama beserta gelar"
+              required
+            />
+            <FormInput
+              label="Jabatan / Fungsi"
+              name="jabatan"
+              value={perangkatForm.jabatan}
+              onChange={handlePerangkatFormChange}
+              placeholder="Contoh: Kaur Keuangan"
+              required
+            />
+            <ImageUpload
+              label="Foto Profil Aparatur"
+              value={perangkatForm.foto}
+              onChange={(url) => setPerangkatForm(prev => ({ ...prev, foto: url }))}
+              disabled={user?.role === 'Viewer'}
+            />
+          </fieldset>
+ 
           <div className="flex justify-end gap-3 border-t border-slate-105 pt-4 mt-2">
             <Button variant="outline" size="sm" onClick={() => setPerangkatModal(false)}>
-              Batal
+              {user?.role === 'Viewer' ? 'Tutup' : 'Batal'}
             </Button>
-            <Button type="submit" variant="primary" size="sm">
-              Simpan Aparatur
-            </Button>
+            {user?.role !== 'Viewer' && (
+              <Button type="submit" variant="primary" size="sm">
+                Simpan Aparatur
+              </Button>
+            )}
           </div>
         </form>
       </Modal>

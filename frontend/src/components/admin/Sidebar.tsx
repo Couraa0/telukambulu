@@ -35,61 +35,61 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => 
       label: 'Dashboard',
       icon: LayoutDashboard,
       path: '/admin/dashboard',
-      roles: ['Super Admin', 'Admin Konten', 'Admin Pengaduan', 'Admin Profil']
+      roles: ['Super Admin', 'Admin Konten', 'Admin Pengaduan', 'Admin Profil', 'Viewer']
     },
     {
       label: 'Profil Desa',
       icon: ShieldCheck,
       path: '/admin/profil-desa',
-      roles: ['Super Admin', 'Admin Profil']
+      roles: ['Super Admin', 'Admin Profil', 'Viewer']
     },
     {
       label: 'Pengumuman',
       icon: Megaphone,
       path: '/admin/pengumuman',
-      roles: ['Super Admin', 'Admin Konten']
+      roles: ['Super Admin', 'Admin Konten', 'Viewer']
     },
     {
       label: 'Berita',
       icon: FileText,
       path: '/admin/berita',
-      roles: ['Super Admin', 'Admin Konten']
+      roles: ['Super Admin', 'Admin Konten', 'Viewer']
     },
     {
       label: 'Sumber Daya Alam',
       icon: Trees,
       path: '/admin/pesona-desa/sda',
-      roles: ['Super Admin', 'Admin Konten']
+      roles: ['Super Admin', 'Admin Konten', 'Viewer']
     },
     {
       label: 'Produk Unggulan',
       icon: ShoppingBag,
       path: '/admin/pesona-desa/produk-unggulan',
-      roles: ['Super Admin', 'Admin Konten']
+      roles: ['Super Admin', 'Admin Konten', 'Viewer']
     },
     {
       label: 'Destinasi Wisata',
       icon: Palmtree,
       path: '/admin/pesona-desa/destinasi-wisata',
-      roles: ['Super Admin', 'Admin Konten']
+      roles: ['Super Admin', 'Admin Konten', 'Viewer']
     },
     {
       label: 'Pengaduan',
       icon: MessageSquareWarning,
       path: '/admin/pengaduan',
-      roles: ['Super Admin', 'Admin Pengaduan']
+      roles: ['Super Admin', 'Admin Pengaduan', 'Viewer']
     },
     {
       label: 'Galeri Foto',
       icon: Image,
       path: '/admin/galeri',
-      roles: ['Super Admin', 'Admin Konten']
+      roles: ['Super Admin', 'Admin Konten', 'Viewer']
     },
     {
       label: 'Kontak & Layanan',
       icon: Contact,
       path: '/admin/kontak',
-      roles: ['Super Admin', 'Admin Profil']
+      roles: ['Super Admin', 'Admin Profil', 'Viewer']
     },
     {
       label: 'User Admin',
